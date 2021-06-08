@@ -1,0 +1,404 @@
+UID,SID,SchoolName,BarName,RC_Masks_customer,RC_Masks_staff,RC_distance,Drink_Specials,alcohol_togo,Beer_Price,Vodka_price,Cigarettes_inside,Ecig_inside,City,State,togo_cat_raw,alcohol to-go Mixed Drinks Beer Wine,beer,wine,mixed_drinks
+1,1,University of Louisville,The Granville Inn,1,1,1,1,0,4,4.5,0,0,Louisville,KY,,,0,0,0
+3,3,Georgia State University,Harold's Chicken & Ice Bar,0,0,0,1,0,4,5,0,0,Atlanta,GA,,,0,0,0
+5,5,University of Alaska Southeast,Sandbar & Grill,1,1,1,0,0,4,5.5,0,0,Juneau,AK,,N/A,0,0,0
+6,6,Indiana University-Purdue University-Indianapolis,Stacked Pickle,,,,,,,,,,Indianapolis,IN,,,,,
+8,8,University of Illinois at Chicago,Output Tavern,1,1,1,0,0,5,5.5,0,0,Chicago,IL,,N/A,0,0,0
+9,9,Wayne State University,Jolly Pumpkin Pizzeria & Brewery,1,1,1,0,1,6.5,8.5,0,0,Detroit,MI,B,B,1,0,0
+10,10,Black Hills State University,Z Bar and Nightclub,0,0,,1,,,,,,Spearfish,SD,,,,,
+11,11,North Dakota State University-Main Campus,Buffalo Wild Wings,0,1,1,1,0,5,3,0,0,Fargo,ND,,N/A,0,0,0
+18,18,University of Vermont,Radio Bean,,,,,,,,,,Burlington,VT,,,,,
+22,23,University of Nevada- Las Vegas,The Garage,1,1,0,1,0,3.5,4,0,0,Las Vegas,NV,,N/A,0,0,0
+23,24,Central Connecticut State University,Bar On Cedar The LLC,,,,,,,,,,Newington,CT,,,,,
+26,27,University of Massachusetts-Amherst,Murphy's Uptown Tavern,,,,,,,,,,Amherst,MA,,,,,
+27,28,University of Illinois at Urbana-Champaign,Hooters,,,,,,,,,,Champaign,IL,,,,,
+28,29,University of Mississippi,The Coop,,,,,,,,,,Oxford,MS,,,,,
+29,30,University of Wisconsin-Madison,Ideal Bar,,,,,,,,,,Madison,WI,,,,,
+30,31,University of Arkansas at Little Rock,Zack's Place LLC,,,,,,,,,,Little Rock,AR,,,,,
+31,32,University of Kansas,Bird Dog Bar at the Oread,1,1,0,1,0,3,4,0,0,Lawrence,KS,,N/A,0,0,0
+32,33,Texas A & M University-College Station,The Backyard,1,1,1,0,0,,4.5,0,0,College Station,TX,,N/A,0,0,0
+34,35,"University of California, Los Angeles",Barney's Beanery,1,1,1,1,1,5,7,,,Los Angeles,CA,MBW,MBW,1,1,1
+37,39,Colorado State University-Fort Collins,Tap and Handle,1,1,1,1,1,5,7,0,0,Fort Collins,CO,all drinks,all drinks,1,1,1
+40,42,North Carolina State University at Raleigh,C.Grace,,,,,,,,,,Raleigh,NC,,,,,
+41,43,West Virginia University,Scorers,1,1,0,1,0,2,5,0,0,Morgantown,WV,,N/A,0,0,0
+42,44,University of Wisconsin-Oshkosh,Peabodys Ale House,0,0,0,1,0,2,2,0,1,Oshkosh,WI,,,0,0,0
+43,45,University of Nevada-Reno,1864 Tavern,1,1,0,1,0,,,0,0,Reno,NV,,,0,0,0
+46,48,Louisiana State University,The Bleacher's Sports Bar & Grill,,,,,,,,,,Baton Rouge,LA,,,,,
+47,49,Clemson University,TD's of Clemson,1,1,1,1,0,,,0,,Clemson,SC,,N,0,0,0
+48,50,The University of Montana,Bodega,,,,,,,,,,Missoula,MT,,,,,
+51,54,University of Houston,On the Rocks Bar and Lounge,,,,,,,,,,Houston,TX,,,,,
+53,56,Rhode Island College,Bradley Café,1,1,0,1,0,4.5,5.5,0,0,Providence,RI,,,0,0,0
+54,57,Florida International University,Sports Grill Bird Road,1,1,0,1,1,3.75,,0,1,Miami,FL,,BW,1,1,0
+55,59,Ohio State University-Main Campus,King Avenue Five,,,,,,,,,,Columbus,OH,,,,,
+57,61,Mississippi State University,Moe's Original BBQ,1,1,1,1,1,4,4,0,0,Starkville,MS,MBW,MBW,1,1,1
+58,62,University of North Carolina at Chapel Hill,Back bar,,,,,,,,,,Chapel Hill,NC,,,,,
+60,64,University of Minnesota-Twin Cities,Stem Minneapolis,,,,,,,,,,Minneapolis,MN,,,,,
+62,67,Idaho State University,Sandbagger's Bar & Grill,0,1,0,1,1,3,4.5,0,0,Pocatello,ID,all drinks,all drinks,1,1,1
+63,68,Northern Arizona University,Collins Irish Pub & Grill,1,1,1,1,0,6.5,6.5,0,0,Flagstaff,AZ,,,0,0,0
+64,69,Indiana University-Bloomington,Lennie's and the Bloomington Brewing Co. Brewpub,,,,1,,5.75,7,0,0,Bloomington,IN,,,,,
+65,70,University of Maryland- Baltimore County,Fish Head Cantina,1,1,1,1,0,4.25,6.54,0,0,Halethorpe,MD,,N/A,0,0,0
+68,73,Great Basin College,Desert Rose Gentlemen's Club and Legal Brothel,1,1,0,0,0,4.5,6,0,0,Elko,NV,,,0,0,0
+69,74,University of Utah,Good Grammar,,,,,,,,,,Salt Lake City,UT,,,,,
+71,76,Temple University,Red Top 24 Bar,,,,,,,,,,Philadelphia,PA,,,,,
+72,77,Bridgewater State University,Emma's Pub & Pizza,,,,,,,,,,Pittsburgh,PA,,,,,
+73,78,Rowan University,Caesar's Lounge & Liquor,1,1,,1,1,,,,,Glassboro,NJ,MBW (liquor store),MBW (liquor store),1,1,1
+75,80,California State University- Northridge,Matador Bowl,1,1,1,1,0,7.5,6.5,0,0,Northridge,CA,,,0,0,0
+76,81,University of Southern Maine,Bonfire Country Bar Portland,,,,,,,,,,Portland,ME,,,,,
+78,83,The University of Tennessee-Knoxville,Club XYZ,1,1,1,,1,3.5,4.5,0,1,Knoxville,TN,MBW,MBW,1,1,1
+79,84,University of Maine,Woodman's Bar & Grill,1,1,1,1,1,6,7,0,0,Orono,ME,,MW,0,1,1
+80,85,University of Missouri-St Louis,The Blockhouse Saloon,,,,,,,,,,St. Louis,MO,,,,,
+82,87,University of Oklahoma-Norman Campus,Library Bar & Grill,1,1,1,1,0,2.75,2.6,0,0,Normon,OK,,,0,0,0
+83,88,University of New Mexico-Main Campus,Carraro's & Joe's Place,,,,,,,,,,Albuquerque,NM,,,,,
+84,89,Missouri State University-Springfield,Martha's Vineyard,1,1,1,1,0,2,4,0,0,Springfield,MO,,,0,0,0
+86,91,Wichita State University,Twin Peaks Wichita,0,0,0,1,0,3.5,3.99,0,0,Wichita,KS,,,0,0,0
+87,92,Utah State University,Buffalo Wild Wings,1,1,1,0,0,3,5.25,0,0,Logan,UT,,N/A,0,0,0
+88,93,University of Oregon,The Paddock,1,1,1,1,0,3.25,5,0,0,Eugene,OR,,,0,0,0
+90,95,University of Michigan-Ann Arbor,HopCat,1,1,0,1,1,3,5,0,0,Ann Arbor,MI,beer,beer,1,0,0
+91,96,George Mason University,Fat Tuesday's,1,1,1,1,1,4.5,5.3,,,Fairfax,VA,MBW,MBW,1,1,1
+93,98,University of Wisconsin-Milwaukee,Bremen Café,,,,,,,,,,"Milwaukee,",WI,,,,,
+94,99,Washington State University,Zeppoz,1,1,1,0,1,3,3.5,0,0,Pullman,WA,"MBW, with food purchase only","MBW, with food purchase only",1,1,1
+95,100,University of Cincinnati-Main Campus,The Brass Tap,1,1,1,1,1,3,4,0,0,Cincinnati,OH,,bw,1,1,0
+96,101,University of Maryland - College Park,Town Hall Liquor & Bar,1,1,1,1,1,3.75,3.75,0,0,College Park,MD,MBW,MBW,1,1,1
+97,102,University of North Dakota,Crooked Pint & Ale House,0,0,1,1,0,3.5,4.5,0,0,Grand Forks,ND,,,0,0,0
+98,103,Kent State University at Kent,Kent Paninis LLC,1,1,1,1,1,5,4,0,0,Kent,OH,MBW,MBW,1,1,1
+101,106,Montclair State University,Public House 46,1,1,1,0,0,3.5,4,0,1,Clifton,NJ,,N/A,0,0,0
+104,110,Montana State University-Billings,The Loft Dance Club,1,1,0,0,0,5,4.5,0,0,Billings,MT,,,0,0,0
+105,111,College of Charleston,Moe's Crosstwon tavern,1,1,0,1,1,2.75,4.5,0,0,Charleston,SC,MBW,MBW,1,1,1
+106,112,South Dakota State University,The Wild Hare,0,1,1,1,1,3,2,0,0,Brookings,SD,b,b,1,0,0
+110,116,University of Massachusetts-Lowell,"Garcia Brogan's Cantina, Pub,",,,,,,,,,,Lowell,MA,,,,,
+112,118,University of Nebraska-Lincoln,N-Zone,1,1,1,1,1,3.25,4.5,0,0,Lincoln,NE,B,B,1,0,0
+113,119,University of Maine at Farmington,Dugout Bar & Grill,1,1,0,1,0,3.5,4,0,0,Farmington,ME,,,0,0,0
+115,121,University of Wyoming,Buckhorn Bar,0,0,1,1,1,3.5,3.5,0,1,Laramie,WY,B,B,1,0,0
+116,122,Fairmont State University,Hilltop Grill,,,,,,,,,,Fairmont,WV,,,,,
+117,123,University of Alaska Anchorage,Timeout Lounge,1,1,0,0,0,5,4.5,0,0,Anchorage,AK,,,0,0,0
+118,124,Delaware State University,Tom's Bullpen,1,1,1,0,0,4,4,0,0,Dover,DE,,N/A,0,0,0
+119,125,University of Iowa,Martini,,,,,,,,,,Iowa City,IA,,,,,
+121,127,University of Delaware,Arena's Deli & Bar,1,1,0,1,1,2.25,5,0,0,Newark,DE,,margaritas,0,0,1
+123,130,Stony Brook University,The Bench,1,1,1,1,0,12,7,0,0,Stony Brook,NY,,,0,0,0
+126,133,University of Nebraska at Kearney,Fanatics Sports Bar,0,0,0,0,1,3.75,4,0,0,Kearney,NE,MBW,MBW,1,1,1
+127,134,University of Idaho,Corner Club,0,1,0,0,1,2.75,2.75,0,0,Moscow,ID,B,B,1,0,0
+128,135,University of Arizona,Frog & Firkin,1,1,0,1,,,,,,Tucson,AZ,,,,,
+129,136,California State University-Fullerton,In Cahoots,,,,,,,,,,Fullerton,CA,,,,,
+131,138,University of Colorado Boulder,Sundown Saloon,,,,,,,,,,Boulder,CO,,,,,
+132,139,University of Central Oklahoma,The Garage,0,1,0,1,1,3,5,0,0,Edmond,OK,B,B,1,0,0
+133,140,Minnesota State University-Mankato,NaKato Bar & Grill,1,1,1,1,1,3,3.5,0,0,Mankato,MN,,BW,1,1,0
+136,143,Oregon State University,Harrison Bar & Grill,1,1,0,1,0,3,4.5,0,0,Corvallis,OR,,,0,0,0
+138,145,University of South Carolina-Columbia,The Capital Club,1,1,0,1,0,3,5,0,0,Columbia,SC,,N/A,0,0,0
+139,1,University of Louisville,Vis a Vis Bar & Grill,,,,,,,,,,Louisville,KY,,,,,
+140,2,University of Alaska Fairbanks,Red Fox Bar & Grill,,,,,,,,,,Fairbanks,AK,,,,,
+141,3,Georgia State University,Puff & Petals,,,,,,,,,,Atlanta,GA,,,,,
+142,4,University of Alabama,Rounders,,,,,,,,,,Tuscaloosa,AL,,,,,
+143,5,University of Alaska Southeast,Squires Rest,1,1,1,0,0,6.5,5,0,0,Juneau,AK,,,0,0,0
+144,6,Indiana University-Purdue University-Indianapolis,St. Joseph Brewery,1,1,1,1,1,5,6,0,0,Indianapolis,IN,b,b,1,0,0
+145,7,University of Georgia,Bar South,,,,,,,,,,Athens,GA,,,,,
+146,8,University of Illinois at Chicago,Del Toro,1,1,1,,,,,0,0,Chicago,IL,,,,,
+147,9,Wayne State University,Bad Luck Bar,,,,,,,,,,Detroit,MI,,,,,
+148,10,Black Hills State University,Stadium Sports Bar,0,0,1,1,0,4,,0,1,Spearfish,SD,,N/A,0,0,0
+149,11,North Dakota State University-Main Campus,Applebee's Neighborhood Grill & Bar,1,1,1,1,0,4.79,4.99,0,0,Fargo,ND,,,0,0,0
+151,13,University of Central Florida,Buffalo Wild Wings,1,1,1,0,0,3,4.25,0,0,Orlando,FL,,,0,0,0
+152,14,Arizona State University- Tempe,Fat Tuesday,1,1,1,1,1,3.5,6,0,0,Tempe,AZ,MBW,MBW,1,1,1
+153,15,Eastern New Mexico University-Main Campus,Dawg House,,,,,,,,,,Portales,NM,,,,,
+156,18,University of Vermont,JP's Pub,1,1,1,0,0,,,0,0,Burlington,VT,,n/a,0,0,0
+157,19,University of South Dakota,Maya Jane's,,,,,,,,,,Vermillion,SD,,,,,
+159,22,University of Florida,Salty Dog Saloon,,,,,,,,,,Gainesville,FL,,,,,
+160,23,University of Nevada- Las Vegas,Ferraro's Italian Restaurant & Wine,1,1,1,1,0,5,10,0,0,Las Vegas,NV,,N/A,0,0,0
+161,24,Central Connecticut State University,The Frosty Mug,1,1,1,0,0,3,4,0,0,New Britain,CT,,,0,0,0
+162,25,Purdue University-Main Campus,Digby's Pub and Patio,1,1,0,1,0,4,4.5,0,0,Lafayette,IN,,will sell cokctails in the future,0,0,0
+163,26,University of Memphis,RP Tracks Restaurant & Bar,1,1,1,1,1,3.5,0.243055556,0,0,Memphis,TN,MBW,MBW,1,1,1
+164,27,University of Massachusetts-Amherst,Hangar Pub and Grill,1,1,0,0,,,,,,Amherst,MA,,,,,
+165,28,University of Illinois at Urbana-Champaign,Fat City Bar and Grill,,,,,,,,,,Urbana,IL,,,,,
+166,29,University of Mississippi,The Blind Pig Pub,1,1,0,1,0,3,5,0,0,Oxford,MS,,,0,0,0
+167,30,University of Wisconsin-Madison,The Laurel Tavern,1,1,1,1,0,3,,0,0,Madison,WI,,N/A,0,0,0
+169,32,University of Kansas,The Cave,,,,,,,,,,Lawrence,KS,,,,,
+170,33,Texas A & M University-College Station,Logies,,,,,,,,,,College Station,TX,,,,,
+171,34,Pennsylvania State University-Main Campus,Inferno,,,,,,,,,,State College,PA,,,,,
+172,35,"University of California, Los Angeles",Gypsy Café,,,,,,,,,,Los Angeles,CA,,,,,
+175,39,Colorado State University-Fort Collins,Blind Pig Pub,1,1,0,1,1,4,7.75,0,0,Fort Collins,CO,,signature drinks,0,0,1
+176,40,Marshall University,26th Street Dinkery,1,1,1,1,,,,,,Hunnington,WV,,,,,
+178,42,North Carolina State University at Raleigh,Hibernian Pub,1,1,0,1,0,3.5,4,0,0,Raleigh,NC,,N/A,0,0,0
+179,43,West Virginia University,Kegler's,1,1,1,1,0,4,4,0,0,Morgantown,WV,,N/A,0,0,0
+180,44,University of Wisconsin-Oshkosh,Molly Mcguire's,0,0,0,1,1,3,4,0,1,Oshkosh,WI,,"B, W",1,1,0
+181,45,University of Nevada-Reno,Shooters Saloon,,,,,,,,,,Reno,NV,,,,,
+182,46,University at Buffalo-NY,Average Joe's,,,,,,,,,,Buffalo,NY,,,,,
+183,47,Keene State College,Margaritas,1,1,1,1,0,2,5,0,0,Keene,NH,,,0,0,0
+184,48,Louisiana State University,French Quarter Daiquiris,,,,,,,,,,Baton Rouge,LA,,,,,
+185,49,Clemson University,Esso Club,1,1,0,1,0,1.5,3.25,0,0,Clemson,SC,,,0,0,0
+186,50,The University of Montana,The Old Post,,,,,,,,,,Missoula,MT,,,,,
+187,51,University of Washington-Seattle Campus,The Grizzled Wizard,,,,,,,,,,Seattle,WA,,,,,
+188,53,CUNY Hunter College,Luke's Bar & Grill,1,1,0,0,1,5,9,0,0,New York,NY,,cocktails,0,0,1
+189,54,University of Houston,Calhoun's Rooftop,,,,,,,,,,Houston,TX,,,,,
+190,55,Southeastern Louisiana University,Benny's Place,,,,,,,,,,Hammond,LA,,,,,
+191,56,Rhode Island College,Jamra Hookah Lounge,,,,,,,,,,Providence,RI,,,,,
+192,57,Florida International University,La Shangrila Karaoke,,,,,,,,,,Miami,FL,,,,,
+193,58,University of Hawaii at Hilo,Karma's Bar and Lounge,,,,,,,,,,Hilo,HI,,,,,
+194,59,Ohio State University-Main Campus,The Big Bar & Grill,,,,,,,,,,Columbus,OH,,,,,
+196,61,Mississippi State University,Rick's Café,1,1,0,1,0,2.75,3.5,0,0,Starkville,MS,,,0,0,0
+197,62,University of North Carolina at Chapel Hill,Linda's Bar & Grill,,,,,,,,,,Chapel Hill,NC,,,,,
+198,63,Auburn University,Derailed Bar & Grill,,,,,,,,,,Auburn,AL,,,,,
+200,65,Weber State University,Iron House,,,,1,0,,,,,Ogden,UT,,N/A,0,0,0
+201,66,University of Kentucky,Wild Cat Saloon,1,1,,1,0,,5,0,0,Lexington,KY,,N/A,0,0,0
+202,67,Idaho State University,Clydesdale Bar & Lounge,0,0,0,1,0,3.75,4,0,1,Pocatello,ID,,,0,0,0
+203,68,Northern Arizona University,Lumberyard Brewing Co,1,1,1,1,1,3.25,4,0,0,Flagstaff,AZ,beer/mixed drinks,beer/mixed drinks,1,1,1
+204,69,Indiana University-Bloomington,The Back Door,,,,,,,,,,Bloomington,IN,,,,,
+205,70,University of Maryland- Baltimore County,Coolahan's Pub,1,1,1,1,1,2,3.5,0,0,Halethorpe,MD,,BW,1,1,0
+206,71,Kennesaw State University,Kennesaw Billiards,0,1,0,1,0,,,1,1,Kennesaw,GA,,N/A,0,0,0
+207,72,University of Pittsburgh,Cheerleader's Gentleman's Club,1,1,1,1,0,5.75,6.25,0,0,Pittsburgh,PA,,,0,0,0
+208,73,Great Basin College,Silver Dollar Club,,,,,,,,,,Elko,NV,,,,,
+209,74,University of Utah,Urban Lounge,,,,,,,,,,Salt Lake City,UT,,,,,
+212,77,Bridgewater State University,Barrett's Alehouse Bridgewater,1,1,0,0,0,4,6,0,0,Pittsburgh,PA,,,0,0,0
+213,78,Rowan University,Chickie's & Pete's,1,1,1,0,1,2.75,4,0,0,Glassboro,NJ,MBW,MBW,1,1,1
+214,79,University of Northern Colorado,Patrick's Irish Pub,1,1,0,1,1,2.25,3,0,0,Greeley,CO,beer,beer,1,0,0
+215,80,California State University-Northridge,Nectar Apple Cocktail Lounge,,,,,,,,,,Northridge,CA,,,,,
+217,82,Montana State University,Mixers Club,,,,,,,,,,Bozeman,MT,,,,,
+218,83,The University of Tennessee-Knoxville,Marie's Olde Towne Tavern,0,0,1,1,1,2.5,,1,1,Knoxville,TN,b,b,1,0,0
+219,84,University of Maine,Roost,,,,,,,,,,Orono,ME,,,,,
+220,85,University of Missouri-St Louis,Whalen's Bar & Restaurant,1,1,0,1,0,3,4,0,0,St. Louis,MO,,,0,0,0
+221,86,University of Northern Iowa,Panther Lounge,0,1,0,1,1,3,3,0,0,Cedar Falls,IA,,sealed to go drinks,,,
+222,87,University of Oklahoma-Norman Campus,Brewhouse,1,1,1,1,1,4.5,2.5,0,1,Normon,OK,,BW,1,1,0
+223,88,University of New Mexico-Main Campus,Posh Nightculb,,,,,,,,,,Albuquerque,NM,,,,,
+224,89,Missouri State University-Springfield,Dugout Bar,0,0,1,1,0,3,3,0,0,Springfield,MO,,N/A,0,0,0
+225,90,University of Nebraska at Omaha,DJ's Dugout Sports Bar- Miracle Hills,1,1,0,1,1,6.5,8,0,0,Omaha,NE,b,b,1,0,0
+226,91,Wichita State University,Kirby's,,,,,,,,,,Wichita,KS,,,,,
+227,92,Utah State University,White Owl,0,1,1,0,1,,,0,0,Logan,UT,B,B,1,0,0
+228,93,University of Oregon,New Max's Tavern,1,1,0,0,0,3,4.5,0,0,Eugene,OR,,,0,0,0
+229,94,Michigan State University,Dublin Square,1,1,1,1,0,4.5,4,0,1,East Lansing,MI,,N/A,0,0,0
+230,95,University of Michigan-Ann Arbor,The Original Cottage Inn,1,1,1,1,0,4,4,0,0,Ann Arbor,MI,,,0,0,0
+231,96,George Mason University,Brion's Grille,1,1,1,1,1,2.5,3,0,0,Fairfax,VA,beer/wine in containers,beer/wine in containers,1,1,0
+232,97,Oklahoma State University-Main Campus,Cigar Box,1,1,1,1,,2,5,1,1,Stillwater,OK,,,,,
+233,98,University of Wisconsin-Milwaukee,Veggas Pub,,,,,,,,,,"Milwaukee,",WI,,,,,
+234,99,Washington State University,Etsi Bravo,,,,,1,,,,,Pullman,WA,,Drinks to go only with food purchases,,,
+235,100,University of Cincinnati-Main Campus,Keystone Bar & Grill Clifton,1,1,1,1,1,4,5,0,0,Cincinnati,OH,,anything sealed for togo drinks,1,1,1
+236,101,University of Maryland - College Park,AMF College Park Lane,,,,,,,,,,College Park,MD,,,,,
+238,103,Kent State University at Kent,The Dome Kent,,,,,,,,,,Kent,OH,,,,,
+239,104,Kansas State University,Taco Lucha,0,0,0,1,0,2.75,3.5,0,0,Manhattan,KS,,,0,0,0
+242,107,Boise State University,Press & Pony,1,1,1,,,,,0,0,Boise,ID,,,,,
+243,108,Bismarck State College,Stadium Sports Bar,,,,,,,,,,Bismarck,ND,,,,,
+244,109,Towson University,Naco Mama's Towson,1,1,0,1,1,2,4,0,0,Towson,MD,,margaritas and crushes,0,0,1
+245,110,Montana State University-Billings,Rainbow Bar,1,1,1,0,0,3.5,3.5,0,0,Billings,MT,,,0,0,0
+246,111,College of Charleston,Dudley's,1,1,0,1,0,,6,0,0,Charleston,SC,,,0,0,0
+247,112,South Dakota State University,Skinner's Pub,0,0,0,1,1,2.5,3,0,0,Brookings,SD,B,B,1,0,0
+249,114,University of Southern Mississippi,Nick's Ice House,,,,,,,,,,Hattiesburg,MS,,,,,
+250,115,Southern Connecticut State University,Rudy's Bar,1,1,0,1,0,5,5,0,0,New Haven,CT,,N/A,0,0,0
+253,118,University of Nebraska-Lincoln,Marz,,,,,,,,,,Lincoln,NE,,,,,
+254,119,University of Maine at Farmington,The Roost,,,,,,,,,,Farmington,ME,,,,,
+255,120,University of Arkansas,Yeehawg,,,,,,,,,,Fayetteville,AR,,,,,
+256,121,University of Wyoming,Bud's Bar,0,0,0,1,1,3,3,0,0,Laramie,WY,,bw,1,1,0
+257,122,Fairmont State University,The College Lunch,0,0,0,1,1,2.14,,0,0,Fairmont,WV,6 pack of Beer,6 pack of Beer,1,0,0
+258,123,University of Alaska Anchorage,Blue Fox,1,1,1,0,0,4,5.5,0,0,Anchorage,AK,,,0,0,0
+259,124,Delaware State University,McGlynns Pub & Restaurant,1,1,0,1,1,2.75,3,0,0,Dover,DE,all drinks,all drinks,1,1,1
+260,125,University of Iowa,Micky's Irish Pub,1,1,1,1,1,4,4,0,0,Iowa City,IA,MBW,MBW,1,1,1
+261,126,New Mexico State University-Main Campus,El Patio Bar,,,,,,,,,,Las Cruces,NM,,,,,
+262,127,University of Delaware,Pat's Pizza & Pasta,1,1,0,,0,2.5,,0,0,Newark,DE,,N/A,0,0,0
+263,128,Virginia Polytechnic Institute and State University,Champs,1,1,0,0,1,,,1,1,Blacksburg,VA,b,b,1,0,0
+264,129,Plymouth State University,Lucky Dog Tavern & Grill,1,1,1,1,1,2.5,5.5,0,0,Plymouth,NH,B,B,1,0,0
+265,130,Stony Brook University,Country Corner,1,1,1,1,0,6,4,0,0,Stony Brook,NY,,N/A,0,0,0
+266,131,Illinois State University,Drifters,,,,,,,,,,Bloomington,IL,,,,,
+267,132,Arkansas State University-Main Campus,The Diamond Grill,,,,,,,,,,Jonesboro,AR,,,,,
+268,133,University of Nebraska at Kearney,Cunninghams Journal,0,0,0,0,1,4,3.75,0,0,Kearney,NE,M,M,0,0,1
+269,134,University of Idaho,Plantation Tavern,1,1,0,1,1,2.25,2.75,0,0,Moscow,ID,MBW,MBW,1,1,1
+271,136,California State University-Fullerton,Branaga's Irish Pub,,,,,,,,,,Fullerton,CA,,,,,
+272,137,Virginia Commonwealth University,The Camel,1,1,,1,1,3,6,0,0,Richmond,VA,,B: max 2 drinks to-go and must order food as well,1,0,0
+273,138,University of Colorado Boulder,The Walrus Saloon,,,,,,,,,,Boulder,CO,,,,,
+274,139,University of Central Oklahoma,Majors,0,0,1,1,,2,5,1,1,Edmond,OK,,,,,
+275,140,Minnesota State University-Mankato,New Bohemia - Mankato,,,,,,,,,,Mankato,MN,,,,,
+276,141,University of Connecticut,True Blue Tavern,,,,,,,,,,Mansfield,CT,,,,,
+277,142,East Carolina University,Winlsow's Tavern,1,1,1,1,1,4.5,6,0,0,Greenville,NC,,bw; unopend bw from the shop in the back,1,1,0
+278,143,Oregon State University,Clodfelter's,1,1,1,0,0,3.95,5,0,0,Corvallis,OR,,,0,0,0
+279,144,University of Hawaii at Manoa,GS Studios,,,,,,,,,,Honolulu,HI,,,,,
+280,145,University of South Carolina-Columbia,Bar None,1,1,0,0,0,2.5,3.25,0,0,Columbia,SC,,N/A,0,0,0
+282,2,University of Alaska Fairbanks,Mecca Bar,0,0,0,0,0,3.5,4,0,0,Fairbanks,AK,,N/A,0,0,0
+283,3,Georgia State University,WildPitch Underground,,,,,,,,,,Atlanta,GA,,,,,
+285,6,Indiana University-Purdue University-Indianapolis,TGI Fridays,,,,,,,,,,Indianapolis,IN,,,,,
+286,7,University of Georgia,Walker Coffee Shop & Pub,1,1,1,0,0,3,4.5,1,1,Athens,GA,,,0,0,0
+288,9,Wayne State University,Z's Villa,1,1,1,1,0,2.95,7.5,0,0,Detroit,MI,,,0,0,0
+289,10,Black Hills State University,Flanagan's Irish Pub,0,0,0,0,0,4.5,4,0,0,Spearfish,SD,,N/A,0,0,0
+292,13,University of Central Florida,The Public House,1,1,0,1,0,5,5.5,0,0,Orlando,FL,,N/A,0,0,0
+294,16,University of New Hampshire-Main Campus,Libby's Bar & Grill,1,1,1,0,0,4,5,0,0,Durham,NH,,N/A,0,0,0
+295,17,Western Washington University,Beaver Inn,1,1,0,1,0,4.5,4.5,0,0,Bellingham,WA,,,0,0,0
+296,18,University of Vermont,Manhattan Pizza & Pub,1,1,1,1,1,2.5,5,0,0,Burlington,VT,cocktail/beer,cocktail/beer,1,0,1
+297,19,University of South Dakota,Old Lumber Company Grill and Bar,0,0,0,1,0,4,3,0,1,Vermillion,SD,,N/A,0,0,0
+298,20,Middle Tennessee State University,Liquid Smoke,1,1,0,0,1,2,,0,0,Murfreeboro,TN,"B; only serves beer, no wine or liquour","B; only serves beer, no wine or liquour",1,0,0
+299,22,University of Florida,Mother's Pub & Grill,1,1,0,1,1,3,2,0,0,Gainesville,FL,beers,beers,1,0,0
+300,23,University of Nevada- Las Vegas,Dispensary Lounge,1,1,1,0,0,3.5,7,1,1,Las Vegas,NV,,,0,0,0
+301,24,Central Connecticut State University,Belvedere Café and restaurant,1,1,0,0,0,,4,1,1,New Britain,CT,,,0,0,0
+302,25,Purdue University-Main Campus,Mom's Place Inc,,,,,,,,,,Lafayette,IN,,,,,
+303,26,University of Memphis,Newby's,,,,,,,,,,Memphis,TN,,,,,
+304,27,University of Massachusetts-Amherst,Spoke,,,,,,,,,,Amherst,MA,,,,,
+305,28,University of Illinois at Urbana-Champaign,Esquire Lounge Inc,1,1,1,0,0,2,3.75,0,0,Champaign,IL,,,0,0,0
+306,29,University of Mississippi,Round Table on the Square,,,,,,,,,,Oxford,MS,,,,,
+307,30,University of Wisconsin-Madison,Liquid,,,,,,,,,,Madison,WI,,,,,
+309,33,Texas A & M University-College Station,Buffalo Wild Wings,1,1,1,0,0,4,4,0,0,College Station,TX,,,0,0,0
+310,34,Pennsylvania State University-Main Campus,Arena Bar & Grill,1,1,1,1,1,2.5,3,0,0,State College,PA,take out beer,take out beer,1,0,0
+311,35,"University of California, Los Angeles",Philly West Bar & Grill,,,,,,,,,,Los Angeles,CA,,,,,
+317,42,North Carolina State University at Raleigh,Sammy's Tap & Grill,1,1,1,1,0,2.5,4,0,0,Raleigh,NC,,,0,0,0
+318,43,West Virginia University,High Street Canteen,1,1,1,1,1,2.5,,0,0,Morgantown,WV,"6 pack beer, cups of beer to go","6 pack beer, cups of beer to go",1,0,0
+321,46,University at Buffalo- NY,Westfield's,,,,,,,,,,Buffalo,NY,,,,,
+322,47,Keene State College,Cobblestone Ale House,,,,,,,,,,Keene,NH,,,,,
+324,49,Clemson University,Top of the Tavern,,,,,,,,,,Clemson,SC,,,,,
+325,50,The University of Montana,Missoula Club,1,1,1,0,1,2.75,3,0,0,Missoula,MT,,,,,
+326,51,University of Washington-Seattle Campus,Shultzy's Bar & Grill,,,,,,,,,,Seattle,WA,,,,,
+329,55,Southeastern Louisiana University,Red White & Brew,0,1,,0,1,,,,,Hammond,LA,,BW,1,1,0
+330,56,Rhode Island College,The Abbey,,,,,,,,,,Providence,RI,,,,,
+333,60,Western Kentucky University,Lost River Pizza,0,1,1,1,1,2.9,4.5,0,0,Bowling Green,KY,mbw,mbw,1,1,1
+334,61,Mississippi State University,Hobie's on Main,,,,,,,,,,Starkville,MS,,,,,
+338,66,University of Kentucky,West Sixth Greenroom,,,,,,,,,,Lexington,KY,,,,,
+339,67,Idaho State University,Charley's,0,1,0,0,0,2.5,3.5,0,1,Pocatello,ID,,,0,0,0
+340,68,Northern Arizona University,Monsoon,1,1,1,1,,,,,,Flagstaff,AZ,,,,,
+342,70,University of Maryland- Baltimore County,Jennings Café,1,1,1,1,1,3.75,3.5,0,0,Catonsville,MD,mbw,mbw,1,1,1
+343,71,Kennesaw State University,The Lizzy Cantina,0,1,1,1,0,3,5,0,0,Kennesaw,GA,,N/A,0,0,0
+345,73,Great Basin College,Duncan Littlecreek Gallery,1,1,1,0,1,4.5,5.5,0,0,Elko,NV,MBW,MBW,1,1,1
+346,74,University of Utah,Dick N' Dixie's,1,1,1,0,0,2,3.5,0,0,Salt Lake City,UT,,,0,0,0
+348,76,Temple University,The Draught House Pub & Grill,1,1,0,1,0,4.5,6,0,0,Philadelphia,PA,,,0,0,0
+349,77,Bridgewater State University,99 Restaurants,1,1,1,0,1,2.99,,0,0,Pittsburgh,PA,mbw,mbw,1,1,1
+353,81,University of Southern Maine,Matthew's,,,,,,,,,,Portland,ME,,,,,
+354,82,Montana State University,Fatt Boy's Bar and Grill,,,,,,,,,,Bozeman,MT,,,,,
+356,86,University of Northern Iowa,Octopus,0,1,1,1,1,1,2.5,0,1,Cedar Falls,IA,,BW,1,1,0
+357,86,University of Northern Iowa,Sharky's Fun House,,,,,,,,,,Cedar Falls,IA,,,,,
+358,87,University of Oklahoma-Norman Campus,O'Connell's Irish Pub & Grille,1,1,0,,0,2,2,0,0,Normon,OK,,,0,0,0
+359,88,University of New Mexico-Main Campus,Albuquerque Press Club,,,,,,,,,,Albuquerque,NM,,,,,
+360,89,Missouri State University-Springfield,Mix Ultralounge,1,1,0,0,0,,,0,0,Springfield,MO,,,0,0,0
+361,90,University of Nebraska at Omaha,Barrett's Barleycorn Pub & Grill,1,1,0,1,0,3.5,5,0,0,Omaha,NE,,bwm,1,1,1
+362,91,Wichita State University,The Field House,1,1,0,1,0,2.25,3.75,0,0,Wichita,KS,,N/A,0,0,0
+363,92,Utah State University,Sultan's Tavern,0,0,0,0,0,2.5,2.5,0,0,Logan,UT,,,0,0,0
+364,93,University of Oregon,Mulligans Pub,1,1,1,1,0,2.5,4.5,0,0,Eugene,OR,,,0,0,0
+368,97,Oklahoma State University-Main Campus,Eskimo Joe's,1,1,1,1,0,5,2,0,0,Stillwater,OK,,N/A,0,0,0
+369,98,University of Wisconsin-Milwaukee,The Black Rose irish pub,,,,,,,,,,"Milwaukee,",WI,,,,,
+373,102,University of North Dakota,Bonzer's Sandwich Pub,0,0,,1,1,4,3.5,0,0,Grand Forks,ND,"mixed, bottles of beer/wine","mixed, bottles of beer/wine",1,1,1
+374,103,Kent State University at Kent,157 Lounge,1,1,1,1,0,2,4,0,1,Kent,OH,,,0,0,0
+377,107,Boise State University,Barbacoa Grill,0,0,0,0,1,7,7,0,0,Boise,ID,M,M,0,0,1
+380,111,College of Charleston,Mynt,,,,,,,,,,Charleston,SC,,,,,
+381,112,South Dakota State University,The Ram & O'Hare's,,,,,,,,,,Brookings,SD,,,,,
+384,115,Southern Connecticut State University,Box 63 American Bar & Grill,,,,,,,,,,New Haven,CT,,,,,
+385,116,University of Massachusetts-Lowell,Buck's Bar & Grill Ltd,0,0,0,,,,,,,Lowell,MA,,,,,
+388,121,University of Wyoming,Copper Corner LLC,,,,,,,,,,Laramie,WY,,,,,
+390,124,Delaware State University,Allure Nightclub,,,,,,,,,,Dover,DE,,,,,
+392,126,New Mexico State University-Main Campus,Halo's,,,,,,,,,,Las Cruces,NM,,,,,
+393,127,University of Delaware,Mad Macs,1,1,1,1,0,2.75,5,0,0,Newark,DE,,,0,0,0
+397,133,University of Nebraska at Kearney,JD's,,,,,,,,,,Kearney,NE,,,,,
+398,134,University of Idaho,Applebee's,1,1,1,1,0,4.5,,0,0,Moscow,ID,,N/A,0,0,0
+399,135,University of Arizona,Dutch Eatery & Refuge,1,1,1,1,1,6,6,0,0,Tucson,AZ,MBW,MBW,1,1,1
+401,137,Virginia Commonwealth University,City Dogs,1,1,1,1,1,4,4,0,0,Richmond,VA,,MB,1,0,1
+403,139,University of Central Oklahoma,The Martini Lounge,,,,,,,,,,Edmond,OK,,,,,
+404,140,Minnesota State University-Mankato,Bradley's on Stadium,,,,,,,,,,Mankato,MN,,,,,
+406,142,East Carolina University,Carolina Ale House,1,1,1,0,0,,,0,1,Greenville,NC,,N/A,0,0,0
+408,144,University of Hawaii at Manoa,Hard Rock Café,,,,,0,,,,,Honolulu,HI,,N/A,0,0,0
+409,145,University of South Carolina-Columbia,Uncle Fester's Sports Bar,,,0,1,0,3,4,0,0,Columbia,SC,,,0,0,0
+410,1,University of Louisville,Magnolia Bar,,,,,,,,,,Louisville,KY,,,,,
+411,2,University of Alaska Fairbanks,The Marlin,,,,,,,,,,Fairbanks,AK,,,,,
+412,3,Georgia State University,Soul Bar At Pals Lounge,,,,,,,,,,Atlanta,GA,,,,,
+413,4,University of Alabama,Green Bar,,,,,,,,,,Tuscaloosa,AL,,,,,
+415,6,Indiana University-Purdue University-Indianapolis,ICON Lounge,,,,,,,,,,Indianapolis,IN,,,,,
+417,8,University of Illinois at Chicago,The CrossRoads Bar & Grill,1,1,1,0,1,6,7,0,0,Chicago,IL,,BW,1,1,0
+418,9,Wayne State University,Temple Bar,1,1,1,0,0,6,3.5,,,Detroit,MI,,,0,0,0
+420,11,North Dakota State University-Main Campus,Sidestreet Grille & Pub,0,0,1,1,0,4,4,0,0,Fargo,ND,,N/A,0,0,0
+421,12,University of Louisiana at Lafayette,Prime,,,,,,,,,,Lafayette,LA,,,,,
+422,13,University of Central Florida,Bar Louie,,,,,,,,,,Orlando,FL,,,,,
+423,14,Arizona State University- Tempe,The Lodge Sasquatch Kitchen,1,1,0,1,1,5,5,0,0,Tempe,AZ,,BM,1,0,1
+424,16,University of New Hampshire-Main Campus,The Knot Irish Pub,,,,,,,,,,Durham,NH,,,,,
+425,17,Western Washington University,Schweinhaus Biergarten,1,1,1,1,1,5,,0,0,Bellingham,WA,,$16-20 to fill up growler customers bring in,1,0,0
+426,18,University of Vermont,Nectar's,1,1,1,0,1,3.5,6,0,0,Burlington,VT,bwm: whole menu is allowed for to-go,bwm: whole menu is allowed for to-go,1,1,1
+427,19,University of South Dakota,Carey's Bar,0,1,0,1,1,4,3.25,0,0,Vermillion,SD,beer only,beer only,1,0,0
+428,20,Middle Tennessee State University,Level 3,,,,,,,,,,Murfreeboro,TN,,,,,
+430,23,University of Nevada- Las Vegas,Stake Out,1,1,1,1,0,4,,1,1,Las Vegas,NV,,,0,0,0
+431,24,Central Connecticut State University,The Back Nine Tavern,1,1,1,0,0,,5,0,0,New Britain,CT,,,0,0,0
+432,25,Purdue University-Main Campus,Brother's Bar & Grill,1,1,1,1,0,4,3,0,0,West Lafayette,IN,,n,0,0,0
+433,26,University of Memphis,The Bluff,,,,,,,,,,Memphis,TN,,,,,
+434,27,University of Massachusetts-Amherst,Old Town Tavern,,,,,,,,,,Amherst,MA,,,,,
+436,29,University of Mississippi,Rooster's Blues House,,,,,,,,,,Oxford,MS,,,,,
+437,30,University of Wisconsin-Madison,Wando's,1,1,0,1,0,4.25,3.5,0,0,Madison,WI,,,0,0,0
+438,31,University of Arkansas at Little Rock,Norm's,,,,,,,,,,Little Rock,AR,,,,,
+439,32,University of Kansas,Harbour Lights,,,,,,,,,,Lawrence,KS,,,,,
+440,33,Texas A & M University-College Station,Icon Nightclub & Lounge,,,,,,,,,,College Station,TX,,,,,
+441,34,Pennsylvania State University-Main Campus,Café 210 West,1,1,1,0,1,3.25,4,0,0,State College,PA,M,M,0,0,1
+442,35,University of California Los Angeles,Byblos,1,1,1,0,1,7,12,0,0,Los Angeles,CA,MBW,MBW,1,1,1
+443,36,Portland State University,Tube,,,,,,,,,,Portland,OR,,,,,
+444,37,Iowa State University,Blue Owl Bar,,,,,,,,,,Ames,IA,,,,,
+445,39,Colorado State University-Fort Collins,Sahara Night,,,,,,,,,,Fort Collins,CO,,,,,
+446,40,Marshall University,Inn Between Bar & Grill,1,1,1,0,0,2.5,2.5,0,0,Hunnington,WV,,,0,0,0
+447,41,Rutgers University-New Brunswick,Christopher's,,,,,,,,,,New Brunswick,NJ,,,,,
+448,42,North Carolina State University at Raleigh,Flex,1,1,0,1,0,4,4.75,0,0,Raleigh,NC,,,0,0,0
+449,43,West Virginia University,Back Door,,,,,,,,,,Morgantown,WV,,,,,
+450,44,University of Wisconsin-Oshkosh,Magnet Billboard's,,,,,,,,,,Oshkosh,WI,,,,,
+451,45,University of Nevada-Reno,Doc Holidays,1,1,0,1,0,3,5,0,0,Reno,NV,,N/A,0,0,0
+453,47,Keene State College,Kilkenny Pub,,,,,,,,,,Keene,NH,,,,,
+455,49,Clemson University,Sloan Street Tap Room,,,,,,,,,,Clemson,SC,,,,,
+456,50,The University of Montana,Press Box Sports Bar,1,1,1,0,1,5.5,6,0,0,Missoula,MT,liquor,liquor,0,0,1
+457,51,University of Washington-Seattle Campus,Finn MacCool's Irish Public House,,,,,,,,,,Seattle,WA,,,,,
+458,53,CUNY Hunter College,Russian Vodka Room,1,1,1,1,1,9,9,0,0,New York,NY,MBW,MBW,1,1,1
+459,54,University of Houston,The Den,1,1,1,1,1,4,3.5,0,0,Houston,TX,M,M,0,0,1
+460,55,Southeastern Louisiana University,Mariner's Inn,1,1,0,1,1,2.75,6.75,0,0,Hammond,LA,all drinks,all drinks,1,1,1
+461,56,Rhode Island College,Ciara Restaurant & Lounge,,,,,,,,,,Johnston,RI,,,,,
+462,57,Florida International University,Ritmo Café,,,,,,,,,,Miami,FL,,,,,
+464,60,Western Kentucky University,Dublin's Irish Pub,,,,,,,,,,Bowling Green,KY,,,,,
+467,63,Auburn University,Quitoxes,,,,,,,,,,Auburn,AL,,,,,
+468,64,University of Minnesota-Twin Cities,The Pourhouse Dinkytown,1,1,0,1,0,3.5,4,0,0,Minneapolis,MN,,,0,0,0
+469,66,University of Kentucky,Ole Hooker's,,,,,,,,,,Lexington,KY,,,,,
+470,67,Idaho State University,Center Street Clubhouse,0,0,0,1,0,3,4.5,0,0,Pocatello,ID,,,0,0,0
+471,68,Northern Arizona University,Spectators Bar & Grill,1,1,1,1,1,4,3.5,0,0,Bozeman,MT,MBW,MBW,1,1,1
+472,69,Indiana University-Bloomington,The Bishop Bar,,,,,,,,,,Bloomington,IN,,,,,
+473,70,University of Maryland- Baltimore County,Morsbergers Tavern LLC,1,1,0,0,1,4,4.75,0,0,Catonsville,MD,b; canned beer to-go,b; canned beer to-go,1,0,0
+475,72,University of Pittsburgh,Cavo Night Club,,,,,,,,,,Pittsburgh,PA,,,,,
+476,73,Great Basin College,Tiki Hut,1,1,1,1,0,2.75,4,1,1,Elko,NV,,,0,0,0
+477,74,University of Utah,Ex-Wifes Place,,,,,,,,,,Salt Lake City,UT,,,,,
+478,75,The University of Texas at Austin,Terrace59,,,,,,,,,,Austin,TX,,,,,
+479,76,Temple University,The Hubble Bubble Hookah Lounge,,,,,,,,,,Philadelphia,PA,,,,,
+480,77,Bridgewater State University,Niko Bar & Grill,1,1,0,1,1,5,6,0,0,Pittsburgh,PA,,cosmos/sangria,0,1,1
+481,78,Rowan University,Landmark Americana-Glassboro,1,1,1,0,0,,,0,0,Glassboro,NJ,,,0,0,0
+482,79,University of Northern Colorado,Goodtime Towne Tavern,,,,,,,,,,Greeley,CO,,,,,
+483,80,California State University- Northridge,Oh Gradys,,,,,,,,,,Granada Hills,CA,,,,,
+485,82,Montana State University,Pub 317,1,1,1,1,0,3.5,4.5,0,0,Bozeman,MT,,,0,0,0
+486,83,The University of Tennessee-Knoxville,Balter Beerworks,1,1,1,1,1,5.25,6,0,0,Knoxville,TN,beer only,beer only,1,0,0
+487,84,University of Maine,Margaritas Mexican Restaurant,1,1,1,1,1,2.5,6,0,0,Orono,ME,,MB,1,0,1
+488,85,University of Missouri-St Louis,Lowes Entertainment,,,,,,,,,,St. Louis,MO,,,,,
+489,86,University of Northern Iowa,Little Bigs,,,,,,,,,,Cedar Falls,IA,,,,,
+490,87,University of Oklahoma-Norman Campus,Blackbird Gastropub,1,1,1,1,1,5,2.4,1,1,Normon,OK,,BW,1,1,0
+491,88,University of New Mexico-Main Campus,Brickyard Pizza,1,1,0,1,0,3,6,0,0,Albuquerque,NM,,N/A,0,0,0
+492,89,Missouri State University-Springfield,Scotch & Soda,,,,,,,,,,Springfield,MO,,,,,
+493,90,University of Nebraska at Omaha,Fox & Hound,,,,,,,,,,Omaha,NE,,,,,
+494,91,Wichita State University,The Anchor,1,1,1,1,1,4.89,4,0,0,Wichita,KS,MBW,MBW,1,1,1
+495,92,Utah State University,Mulligans,1,1,1,0,0,3.5,3,0,0,Logan,UT,,,0,0,0
+496,93,University of Oregon,Rennie's Landing,1,1,1,1,0,4.5,5.5,0,0,Eugene,OR,,N/A,0,0,0
+497,94,Michigan State University,Mac's Bar,,,,,,,,,,East Lansing,MI,,,,,
+498,95,University of Michigan-Ann Arbor,Red Hawk Bar & Grill,1,1,0,1,1,4.2,6,0,0,Ann Arbor,MI,bottles of wine and beer only,bottles of wine and beer only,1,1,0
+500,97,Oklahoma State University-Main Campus,Buffalo Wild Wings,1,1,0,1,0,2.95,4.4,0,0,Stillwater,OK,,N/A,0,0,0
+501,98,University of Wisconsin-Milwaukee,The Jazz Estate,,,,,,,,,,"Milwaukee,",WI,,,,,
+502,99,Washington State University,Valhalla Bar & Grill,1,1,1,1,1,3.75,3,0,0,Pullman,WA,bottles of wine to go only,bottles of wine to go only,0,1,0
+503,100,University of Cincinnati-Main Campus,The Harth Lounge,,,,,,,,,,Cincinnati,OH,,,,,
+504,101,University of Maryland - College Park,Cornerstone Grill & Loft,1,1,1,0,1,3.5,3.5,0,,College Park,MD,MBW,MBW,1,1,1
+505,102,University of North Dakota,Judy's Tavern,0,0,0,1,0,2.5,,0,0,Grand Forks,ND,,N/A,0,0,0
+506,103,Kent State University at Kent,Zephyr Pub,1,1,1,1,0,4,5,0,0,Kent,OH,,,0,0,0
+508,105,University of Missouri-Columbia,AMF Town & Country Lane,1,1,1,1,0,4,5,0,0,Columbia,MO,,,0,0,0
+509,106,Montclair State University,Alexus Steakhouse & Tavern,1,1,,,1,,,1,1,Clifton,NJ,MBW,MBW,1,1,1
+510,107,Boise State University,The handlebar Boise,,,,,,,,,,Boise,ID,,,,,
+511,109,Towson University,Lil Dicky's,,,,,,,,,,Towson,MD,,,,,
+512,110,Montana State University-Billings,Holligan's FC Sport Bar,0,1,1,1,1,3.5,4,0,0,Billings,MT,MBW,MBW,1,1,1
+513,111,College of Charleston,Royal American,1,1,0,1,0,4.5,6,0,0,Charleston,SC,,N/A,0,0,0
+514,112,South Dakota State University,Sully's Irish Pub,1,1,0,1,1,3,4,0,0,Brookings,SD,B,B,1,0,0
+515,113,Saint Cloud State University,D.B. Searle,,,,,,,,,,St. Cloud,MN,,,,,
+516,114,University of Southern Mississippi,Buffalo Wild Wings,0,0,1,1,0,3,3,0,0,Hattiesburg,MS,,N/A,0,0,0
+517,115,Southern Connecticut State University,Three Sheets,,,,,,,,,,New Haven,CT,,,,,
+518,116,University of Massachusetts-Lowell,Worthen House,1,1,0,0,0,3,5,0,0,Lowell,MA,,N/A,0,0,0
+519,118,University of Nebraska-Lincoln,McKinney's Irish Pub,1,1,0,1,1,3,3,0,0,Lincoln,NE,B,B,1,0,0
+520,120,University of Arkansas,Maxine's Tap Room,1,1,1,0,1,4,6,0,0,Fayetteville,AR,MBW,MBW,1,1,1
+521,121,University of Wyoming,3rd Street Bar & Grill,,,,,,,,,,Laramie,WY,,,,,
+522,122,Fairmont State University,Benny's,,,,,,,,,,Fairmont,WV,,,,,
+523,124,Delaware State University,The Golden Fleece Tavern,,,,,,,,,,Dover,DE,,,,,
+524,125,University of Iowa,Quinton's Bar & Deli,1,1,0,1,1,4,4,0,1,Iowa City,IA,mbw,mbw,1,1,1
+525,126,New Mexico State University-Main Campus,Lava Rock Lounge,,,,,,,,,,Las Cruces,NM,,,,,
+526,127,University of Delaware,Iron Hill Brewery & Restaurant,1,1,1,1,1,17,7.5,0,0,Newark,DE,MBW,MBW,1,1,1
+527,128,Virginia Polytechnic Institute and State University,London Underground Pub Ltd,,,,,,,,,,Blacksburg,VA,,,,,
+528,130,Stony Brook University,Velvet Lounge,,,,,,,,,,Stony Brook,NY,,,,,
+529,131,Illinois State University,Maggie's Miley's,1,1,1,1,0,3.5,4,0,0,Bloomington,IL,,,0,0,0
+530,132,Arkansas State University-Main Campus,Brickhouse Bar & Grill,,,,,,,,,,Jonesboro,AR,,,,,
+531,133,University of Nebraska at Kearney,Copperfields Bar,0,0,0,1,1,2.75,3,0,1,Kearney,NE,B,B,1,0,0
+532,134,University of Idaho,Garden Lounge,,,,,,,,,,Moscow,ID,,,,,
+533,135,University of Arizona,Club 4th Ave,,,,,,,,,,Tucson,AZ,,,,,
+534,136,California State University-Fullerton,Heroes Bar & Grill,1,1,0,1,1,6.5,7.5,0,1,Fullerton,CA,,MB,1,0,1
+535,137,Virginia Commonwealth University,District 5,1,1,1,1,1,4,5,0,1,Richmond,VA,MBW,MBW,1,1,1
+536,138,University of Colorado Boulder,Bohemian Biergarten,1,1,1,0,1,6.5,5,0,0,Boulder,CO,,BW,1,1,0
+537,139,University of Central Oklahoma,Old Chicago,,,,,,,,,,Edmond,OK,,,,,
+538,140,Minnesota State University-Mankato,Spinners Bar,1,1,0,1,0,3.5,3.75,0,0,Mankato,MN,,N/A,0,0,0
+539,141,University of Connecticut,Ted's Restaurant & Bar,,,,,,,,,,Storrs,CT,,,,,
+541,143,Oregon State University,Flat Tail Brewing,,,,,,,,,,Corvallis,OR,,,,,
+542,144,University of Hawaii at Manoa,Jazz Minds Honolulu,,,,,,,,,,Honolulu,HI,,,,,
+543,145,University of South Carolina-Columbia,Blue,,,,,,,,,,Columbia,SC,,,,,

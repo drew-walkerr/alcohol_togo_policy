@@ -1,0 +1,52 @@
+State,State_abbr,FIPS,APIS_date,alcohol_togo_APIS_bars,alcohol_togo_APIS_rest,Spirits_togo_NABCA_bars,Spirits_togo_NABCA_rest,Doug's Notes for Differneces,Suggested_code_bar,Suggested_code_rest
+Alabama,AL,1,9/15/2020,0,0,Yes,Yes,"Appears to be due to timing of collection, APIS likely more accurate",0,0
+Alaska,AK,2,5/22/2020,1,1,Yes,Yes,,1,1
+Arizona,AZ,4,8/10/2020,1,1,No,Yes,"In APIS, bars turn on 3/20, NABCA website has curbside alcmarked as expired, spirits marked as yes",1,1
+Arkansas,AR,5,5/26/2020,1,1,Yes,Yes,,1,1
+California,CA,6,8/31/2020,1,1,No,Yes,"order of non-enforcement, agreeing with APIS",1,1
+Colorado,CO,8,9/15/2020,1,1,Yes,Yes,,1,1
+Connecticut,CT,9,6/17/2020,1,1,Yes,Yes,,1,1
+Delaware,DE,10,6/1/2020,1,1,Yes,Yes,,1,1
+District of Columbia,DC,11,6/22/2020,1,1,Yes,Yes,,1,1
+Florida,FL,12,9/14/2020,1,1,No,Yes,"NABCA site has spirit based drink marked as yes if sealed, no for alcohol curbside",1,1
+Georgia,GA,13,8/3/2020,1,1,No,Yes,"NABCA maked as no on all, which is news to this Georgia resident",1,1
+Hawaii,HI,15,6/1/2020,1,1,Yes,Yes,,1,1
+Idaho,ID,16,6/13/2020,1,1,Already Permitted,Already Permitted,,1,1
+Illinois,IL,17,6/26/2020,1,1,Yes,Yes,,1,1
+Indiana,IN,18,6/12/2020,1,1,Yes,Yes,,1,1
+Iowa,IA,19,10/5/2020,1,1,Yes,Yes,,1,1
+Kansas,KS,20,6/8/2020,1,1,Yes,Yes,,1,1
+Kentucky,KY,21,8/11/2020,1,1,Yes,Yes,,1,1
+Louisiana,LA,22,9/11/2020,1,1,Yes,Yes,,1,1
+Maine,ME,23,6/17/2020,1,1,Yes,Yes,,1,1
+Maryland,MD,24,6/12/2020,1,1,Yes,Yes,,1,1
+Massachusetts,MA,25,8/11/2020,1,1,Yes,Yes,,1,1
+Michigan,MI,26,7/31/2020,1,1,Already Permitted,Already Permitted,,1,1
+Minnesota,MN,27,6/10/2020,1,0,Yes,Yes,"sources disagree, news articles from MN indicate a temp order was in place for wine and beer but not spirits at the time of our calls",1,1
+Mississippi,MS,28,7/24/2020,1,0,Yes,Yes,"This one is messy, best I can tell wine was temp legal for togo with a food order, but that was rescinded in Dec 2020 (after our call time)",1,1
+Missouri,MO,29,5/4/2020,1,1,Already Permitted,Already Permitted,,1,1
+Montana,MT,30,5/4/2020,1,1,Yes,Yes,,1,1
+Nebraska,NE,31,7/6/2020,1,1,Yes,Yes,,1,1
+Nevada,NV,32,7/10/2020,1,1,Varies by Locality,Varies by Locality,,1,1
+New Hampshire,NH,33,8/21/2020,1,0,Yes,Yes,"NABCA site says yes for alc curbside, no to spirits, News articles agree with NABCA",1,1
+New Jersey,NJ,34,9/4/2020,1,1,Yes,Yes,,1,1
+New Mexico,NM,35,8/28/2020,0,0,For Food Only,For Food Only,"NABCA site has spirits marked no, food required refers to pick up of non-spirit alcohol, news articles agree with APIS",0,0
+New York,NY,36,7/17/2020,1,1,Yes,Yes,,1,1
+North Carolina,NC,37,7/31/2020,1,1,Yes,Yes,,1,1
+North Dakota,ND,38,9/3/2020,0,0,Already Permitted,Already Permitted,Wine and beer seem to have always been permitted but not liquor,1,1
+Ohio,OH,39,7/31/2020,1,1,Yes,Yes,,1,1
+Oklahoma,OK,40,5/15/2020,1,1,Yes,Yes,,1,1
+Oregon,OR,41,7/24/2020,1,1,Yes,Yes,,1,1
+Pennsylvania,PA,42,7/16/2020,1,1,Already Permitted,Already Permitted,,1,1
+Rhode Island,RI,44,8/7/2020,1,1,Yes,Yes,,1,1
+South Carolina,SC,45,8/3/2020,1,0,Yes,Yes,Governors order agrees with NABCA,1,1
+South Dakota,SD,46,1/1/2020,0,0,Already Permitted,Already Permitted,"beer was already permitted, as long as you already had both an off and on premise liscence, so depedning on how you look at it either could be right. For our places, im guess APIS is closer",0,0
+Tennessee,TN,47,5/22/2020,1,1,Yes,Yes,,1,1
+Texas,TX,48,6/26/2020,1,1,Yes,Yes,,1,1
+Utah,UT,49,5/1/2020,0,0,For Food Only,For Food Only,"NABCA says no for restaurants, but yes for bars. This one is kinda funny, Utah alcohol control appears to have permitted for a time and then early this year said ""uhhh turns out we were wrong and it was never legal, so please disregard prior info… and then flipped again""",1,1
+Vermont,VT,50,6/8/2020,1,1,Yes,Yes,,1,1
+Virginia,VA,51,9/10/2020,1,1,Yes,Yes,,1,1
+Washington,WA,53,7/30/2020,1,1,Yes,Yes,,1,1
+West Virginia,WV,54,9/2/2020,1,1,Yes,Yes,,1,1
+Wisconsin,WI,55,5/13/2020,1,1,Yes,Yes,,1,1
+Wyoming,WY,56,5/16/2020,0,0,Yes,Yes,"executive order was set to expire, agreeing with APIS",0,0

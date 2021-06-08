@@ -1,0 +1,79 @@
+---
+title: "policy_and_outcomes"
+author: "Drew Walker"
+date: "6/7/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(randomForest)
+library(tm)
+```
+
+```{r alcpolicy}
+
+alc_policies <- read_csv("Comparing state COVID Alc Policy Sources.csv")
+```
+
+```{r, outcomes_data}
+outcomes_data <- read_csv("merged_clean_bwm_wave2_edited2.csv")
+
+#Merge with fips to groupby?
+
+str(outcomes_data$State)
+
+outcomes_data$State <- as.factor(outcomes_data$State)
+outcomes_data$beer <- as.factor(outcomes_data$beer)
+outcomes_data$wine <- as.factor(outcomes_data$wine)
+outcomes_data$mixed_drinks <- as.factor(outcomes_data$mixed_drinks)
+
+
+
+#barpolicydata_state <- outcomes_data %>% 
+#  group_by(State) %>% 
+#  summarise(barcount = n(),
+#            beercount = sum(beer == "1", na.rm = TRUE),
+#            no_beercount = sum(beer == "0", na.rm = #TRUE),
+#            na_beercount = sum(is.na(beer)),
+#            winecount = sum(wine == "1", na.rm = TRUE),
+#            no_winecount = sum(wine == "0", na.rm = #TRUE),
+#            na_winecount = sum(is.na(wine)),
+#            mixed_drinkscount = sum(mixed_drinks == "1", #na.rm = TRUE),
+#            no_mixed_drinkscount = sum(mixed_drinks == #"0", na.rm = TRUE),
+#            na_mixed_drinkscount = #sum(is.na(mixed_drinks)))
+#
+##Join with state APIS/ABCA/Doug scores
+#
+#barpolicydata_state_merge <- barpolicydata_state %>% 
+#  rename(State_abbr = State)
+
+outcomes_data_clean <- outcomes_data %>% 
+  rename(State_abbr = State)
+
+joined_policy_and_outcomes <- left_join(alc_policies,outcomes_data_clean, by = "State_abbr")
+```
+
+```{r, cleaning-abca}
+
+#Clean ABCA data
+clean_joined_policy_and_outcomes <- joined_policy_and_outcomes %>% 
+ mutate(
+   NABCA_spirits_bars = case_when(
+      grepl("Yes|Already Permitted|Varies by Localit", Spirits_togo_NABCA_bars, ignore.case = TRUE) ~ 1,
+      grepl("No|For Food Only", Spirits_togo_NABCA_bars, ignore.case = TRUE)~0),
+    NABCA_spirits_rest = case_when(
+      grepl("Yes|Already Permitted|Varies by Localit", Spirits_togo_NABCA_rest, ignore.case = TRUE) ~ 1,
+      grepl("No|For Food Only", Spirits_togo_NABCA_rest, ignore.case = TRUE)~0))
+```
+
+
+
+```{r, outcomes_data}
+write_csv(clean_joined_policy_and_outcomes,  "joined_togo_policy_and_bar_outcomes_data.csv", na = "") 
+library(here)
+here()
+```
