@@ -54,29 +54,22 @@ dirs <- pm_dictionary(type = "directional", filter = c("N", "S", "E", "W"), loca
 combined_prep4 <- pm_state_parse(combined_prep3, dictionary = state_dict)
 # NA for 549 2nd Ave Fairbanks AK 9970
 
-# postmastr::dic_us_states
 
-#tidycensus::census_api_key("YOUR API KEY GOES HERE")
-#city_dict <- pm_dictionary(type = "city", case = c("title","upper"), filter= #dict$state.input, locale = "us")
-
-
-# Trying with tidygeocoder 
-# https://jessecambon.github.io/tidygeocoder/articles/tidygeocoder.html?q=census%20tract#forward-geocoding
-#library(tidygeocoder)
-#addresses <- as.data.frame(combined$FullAddress)
-#census_blocks <- addresses %>% geocode(
-#  address = combined$FullAddress,
-#  method = "census", full_results = TRUE)
-# Many missing from this 
-
+# Using Censusxy package 
 library(purrr)
 library(furrr)
-possible_addresses <- purrr::possibly(cxy_oneline, otherwise = tidyr::tibble("NA"))
+
+geography_oneline <- function(address){
+  cxy_oneline(address,return = "geographies", vintage="Current_Current")
+}
+
+
+possible_addresses <- purrr::possibly(geography_oneline, otherwise = tidyr::tibble("NA"))
+
 census_tracts <- combined %>% 
-  mutate(web_history = future_map(combined$FullAddress,possible_addresses)) 
+  mutate(census_data = future_map(combined$FullAddress,possible_addresses)) 
 
 
-geocodes <- lapply(addresses, cxy_oneline)
 
 ```
 
