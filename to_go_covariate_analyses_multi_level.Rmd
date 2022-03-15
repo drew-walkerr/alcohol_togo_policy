@@ -1,0 +1,124 @@
+---
+title: "Job Aid: Multilevel modeling cross-sectional continuous outcomes"
+author: "Drew Walker"
+date: "3/15/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(table1)
+library(nlme)
+library(here)
+here()
+```
+
+# 1. Purpose
+
+-   This job guide is intended to provide a checklist for future reference in building multilevel cross-sectional regression models.
+
+-   For this example, we will be utilizing data on alcohol to-go policies for bar and restaurant outlets located within 5 miles of college campuses in the US during the COVID-19 pandemic.
+
+**Data Description**
+
+-   Total number of bars/restaurants
+
+-   Number of colleges
+
+-   Number of census tracts
+
+-   APIS/NABCA policies
+
+-   Beer/Vodka prices
+
+-   Bar/Restaurant policies
+
+# 2. Assumptions
+
+-   Continuous outcome: price of beer and price of vodka
+
+-   
+
+-   Bars/restaurants nested within census tracts and states
+
+-   Policies of states and practices of local areas around alcohol sales are theoretically thought to influence prices
+
+# 3. Model Building
+
+-   **Outcome**s: Price of vodka and price of beer
+
+-   **Level 1 Predictors**:
+
+    -   Bar or restaurant to-go alcohol practice
+
+-   **Level 2 Predictors**:
+
+    -   Census tract
+
+-   **Level 3 Predictor**:
+
+    -   State APIS/NABCA policy
+
+```{r load-data}
+combined_covariates <- readRDS("census_tracts_bar_policy_togo_covariates.rds")
+combined_covariates2 <- combined_covariates %>% 
+  unnest(census_data) %>% 
+  select(UID,geographies.Census.Tracts.GEOID,geographies.Census.Tracts.OID,geographies.Census.Tracts.TRACT)
+
+clean_combined_covariates <- left_join(combined_covariates,combined_covariates2,by="UID")
+  
+```
+
+```{r eda}
+
+plot_obs <- ggplot(data=firstday_set_filtered,         
+                   aes(x = days_since_discord_first_comment,
+                       y = recent_comments, group = record_id,color=status))+
+  geom_line()+
+  #adding lines to plot
+                   theme_classic() + 
+  scale_x_continuous(name = "Day since first comment")+
+                   scale_y_continuous(name = "Daily Comments") 
+
+
+```
+
+# Build Null Model (Outcomes)
+
+```{r build-null}
+null <- lme(recent_comments ~ days_since_discord_first_comment*status, random = ~ days_since_discord_first_comment | record_id, data=firstday_set, na.action = na.omit)
+
+
+summary(null)
+
+
+
+```
+
+# ICC calculations
+
+# Adding Level-1 predictors
+
+```{r lvl-1-predictors}
+
+```
+
+# Adding Level-2 predictors
+
+```{r}
+
+```
+
+# Interpretation of Results
+
+-   Interpretation of betas
+
+-   Error scores
+
+-   Model fit
+
+-   Changes in deviance
+
+# Reporting results

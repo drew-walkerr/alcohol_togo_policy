@@ -1,0 +1,76 @@
+---
+title: "to_go_policy_analyses_covariates"
+author: "Drew Walker"
+date: "3/14/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(tm)
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(table1)
+library(nlme)
+library(censusxy)
+library(postmastr)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r load-data}
+bar_covariates <- read.csv("Wave 1 Data and Sampling Frame 10 26 20.csv",encoding ="UTF-8")
+bar_outcomes_and_predictors <- read.csv("joined_togo_policy_and_bar_outcomes_data.csv",encoding="UTF-8")
+
+combined <- left_join(bar_outcomes_and_predictors,bar_covariates,by = "UID")
+combined$FullAddress <- gsub("[^[:alnum:]///' ]", "", combined$FullAddress)
+
+```
+
+# Preprocessing
+
+* Identify census tracts from address
+
+```{r census-tract}
+combined_prep <- pm_identify(combined, var = "FullAddress")
+combined_prep2 <- pm_prep(combined_prep, var = "FullAddress",type = "street")
+pm_postal_all(combined_prep2)
+
+combined_prep3 <- pm_postal_parse(combined_prep2)
+
+# State dictionary
+state_dict <- pm_dictionary(type = "state", case = c("title", "upper"), locale = "us")
+dirs <- pm_dictionary(type = "directional", filter = c("N", "S", "E", "W"), locale = "us")
+
+#add states
+combined_prep4 <- pm_state_parse(combined_prep3, dictionary = state_dict)
+# NA for 549 2nd Ave Fairbanks AK 9970
+
+
+# Using Censusxy package 
+library(purrr)
+library(furrr)
+
+geography_oneline <- function(address){
+  cxy_oneline(address,return = "geographies", vintage="Current_Current")
+}
+
+
+possible_addresses <- purrr::possibly(geography_oneline, otherwise = tidyr::tibble("NA"))
+
+census_tracts <- combined %>% 
+  mutate(census_data = future_map(combined$FullAddress,possible_addresses)) 
+
+saveRDS(census_tracts,"census_tracts_bar_policy_togo_covariates.rds")
+
+
+```
+
