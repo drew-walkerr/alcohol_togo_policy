@@ -12,7 +12,9 @@ library(ggplot2)
 library(table1)
 library(nlme)
 library(here)
+library(psych)
 here()
+library(table1)
 ```
 
 # 1. Purpose
@@ -37,9 +39,63 @@ here()
 
 # 2. Assumptions
 
--   Continuous outcome: price of beer and price of vodka
+-   Continuous outcomes: 
+-   price of beer and price of vodka
 
+-   Predictors (binary): 
 -   
+
+```{r load-data}
+combined_covariates <- readRDS("census_tracts_bar_policy_togo_covariates.rds")
+combined_covariates2 <- combined_covariates %>% 
+  unnest(census_data) %>% 
+  select(UID,geographies.Census.Tracts.GEOID,geographies.Census.Tracts.OID,geographies.Census.Tracts.TRACT,addressComponents.zip)
+
+clean_combined_covariates <- left_join(combined_covariates,combined_covariates2,by="UID")
+  
+clean_combined_covariates_trim <- clean_combined_covariates %>% 
+  select(UID,SID=SID.x, SchoolName = SchoolName.x,
+         BarName = BarName.x,
+         Suggested_code_bar,Suggested_code_rest,NABCA_spirits_bars,NABCA_spirits_rest,geographies.Census.Tracts.GEOID,geographies.Census.Tracts.OID,geographies.Census.Tracts.TRACT,addressComponents.zip,alcohol_togo)
+
+wave_2_data <- read_csv("Results for price stuff/Wave2_cleaned_dw.csv")
+wave_2_data_merge <- wave_2_data %>% 
+  select(UID,SID,RC_Masks_customer,RC_Masks_staff,RC_distance,alcohol_togo, Beer_Price2, Vodka_price2,Cigarettes_inside,Ecig_inside)
+
+wave1_clean <- read_csv("Results for price stuff/Wave1_cleaned.csv")
+
+wave1_clean <- wave1_clean %>% 
+  select(UID,SID,Vodka_price,Beer_Price)
+
+
+both_wave_data_covariates <- left_join(clean_combined_covariates_trim, wave1_clean, by = "UID")
+both_wave_data <- left_join(both_wave_data_covariates,wave_2_data_merge, by = "UID")
+
+both_wave_data <- both_wave_data %>% 
+  mutate(beer_price_change = Beer_Price2-Beer_Price,
+         vodka_price_change = Vodka_price2-Vodka_price) %>% 
+  select(-SID.x) %>% 
+  rename(alcohol_togo = alcohol_togo.y)
+```
+
+```{r eda}
+# Outcome descriptive statistics
+describe(both_wave_data$vodka_price_change)
+describe(both_wave_data$beer_price_change)
+hist(both_wave_data$vodka_price_change)
+hist(both_wave_data$beer_price_change)
+# Should we remove $17 beer data point?
+both_wave_data$Suggested_code_bar <- as.factor(both_wave_data$Suggested_code_bar)
+both_wave_data$Suggested_code_rest <- as.factor(both_wave_data$Suggested_code_rest)
+both_wave_data$NABCA_spirits_bars <- as.factor(both_wave_data$NABCA_spirits_bars)
+both_wave_data$NABCA_spirits_rest <- as.factor(both_wave_data$NABCA_spirits_rest)
+both_wave_data$alcohol_togo <- as.factor(both_wave_data$alcohol_togo)
+
+
+
+table1(~Suggested_code_bar + Suggested_code_rest + NABCA_spirits_bars + NABCA_spirits_rest + alcohol_togo, data=both_wave_data)
+
+```
 
 -   Bars/restaurants nested within census tracts and states
 
@@ -61,56 +117,53 @@ here()
 
     -   State APIS/NABCA policy
 
-```{r load-data}
-combined_covariates <- readRDS("census_tracts_bar_policy_togo_covariates.rds")
-combined_covariates2 <- combined_covariates %>% 
-  unnest(census_data) %>% 
-  select(UID,geographies.Census.Tracts.GEOID,geographies.Census.Tracts.OID,geographies.Census.Tracts.TRACT)
-
-clean_combined_covariates <- left_join(combined_covariates,combined_covariates2,by="UID")
-  
-```
-
-```{r eda}
-
-plot_obs <- ggplot(data=firstday_set_filtered,         
-                   aes(x = days_since_discord_first_comment,
-                       y = recent_comments, group = record_id,color=status))+
-  geom_line()+
-  #adding lines to plot
-                   theme_classic() + 
-  scale_x_continuous(name = "Day since first comment")+
-                   scale_y_continuous(name = "Daily Comments") 
-
-
-```
-
 # Build Null Model (Outcomes)
 
+* In this model, we'll include the outcome (beer and vodka price changes), as well as the levels, being census tract and state 
+
 ```{r build-null}
-null <- lme(recent_comments ~ days_since_discord_first_comment*status, random = ~ days_since_discord_first_comment | record_id, data=firstday_set, na.action = na.omit)
+null <- lme(fixed = beer_price_change ~ 1, data=both_wave_data, random = ~ 1 | geographies.Census.Tracts.GEOID,  na.action = na.omit)
 
 
 summary(null)
-
-
 
 ```
 
 # ICC calculations
 
+
+
 # Adding Level-1 predictors
 
-```{r lvl-1-predictors}
+* alcohol_togo
+
+```{r lvl1-predictors}
+lvl1 <- lme(fixed = beer_price_change ~ alcohol_togo, data=both_wave_data, random = ~ 1 | geographies.Census.Tracts.GEOID,  na.action = na.omit)
+
+
+summary(lvl1)
 
 ```
 
 # Adding Level-2 predictors
 
-```{r}
+```{r lvl2-predictors}
+lvl2 <- lme(fixed = beer_price_change ~ alcohol_togo, data=both_wave_data, random = ~ 1 | geographies.Census.Tracts.GEOID,  na.action = na.omit)
+
+
+summary(lvl2)
 
 ```
 
+# Adding Level-3 predictors
+
+```{r lvl3-predictors}
+lvl3 <- lme(fixed = beer_price_change ~ alcohol_togo, data=both_wave_data, random = ~ 1 | geographies.Census.Tracts.GEOID/SID.y,  na.action = na.omit)
+
+
+summary(lvl3)
+
+```
 # Interpretation of Results
 
 -   Interpretation of betas
