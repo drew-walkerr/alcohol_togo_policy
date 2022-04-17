@@ -13,8 +13,17 @@ library(table1)
 library(nlme)
 library(here)
 library(psych)
+library(misty)
 here()
 library(table1)
+library(ruca)
+library(lme4)
+library(sjPlot)
+library(sjmisc)
+library(patchwork)
+library(sjlabelled)
+#install.packages('TMB', type = 'source')
+library(TMB)
 ```
 
 # 1. Purpose
@@ -23,27 +32,27 @@ library(table1)
 
 -   For this example, we will be utilizing data on alcohol to-go policies for bar and restaurant outlets located within 5 miles of college campuses in the US during the COVID-19 pandemic.
 
-**Data Description**
+-   We'll be primarily using R's nlme package
 
--   Total number of bars/restaurants
-
--   Number of colleges
-
--   Number of census tracts
-
--   APIS/NABCA policies
-
--   Beer/Vodka prices
-
--   Bar/Restaurant policies
+-   <https://cran.r-project.org/web/packages/nlme/nlme.pdf>
 
 # 2. Assumptions
 
--   Continuous outcomes: 
--   price of beer and price of vodka
+-   Continuous outcomes (though these allow for logistic regression also, incorporation of different logit functions) :
 
--   Predictors (binary): 
 -   
+
+          price of beer and price of vodka
+
+-   Predictors (binary):
+
+-   Alcohol to-go policy (1st level) (0= did not allow alcohol to go during COVID-19 data collection, 1 = sold alcohol to-go during COVID-19 data collection)
+
+-   Data contained in nested structure of Restaurant or Bars (Lvl 1) nested in Census Tracts (Lvl 2), nested in States (Lvl 3)
+
+-   EDA: see below to assess distributions of outcomes and predictors-- likely will have issues interpreting differences in RUCA codes.
+
+-   Theoretical rationale: For this project, I was asked to lead a regression analysis on bar and restaurant price changes in alcohol around college campuses, in order to determine potential changes in price point around the COVID-19 pandemic as it is associated with to-go alcohol sales. I immediately wondered if this regression should account for nesting within geographic locations, which led to this exploratory analysis used as an example for this guide.
 
 ```{r load-data}
 combined_covariates <- readRDS("census_tracts_bar_policy_togo_covariates.rds")
@@ -56,7 +65,7 @@ clean_combined_covariates <- left_join(combined_covariates,combined_covariates2,
 clean_combined_covariates_trim <- clean_combined_covariates %>% 
   select(UID,SID=SID.x, SchoolName = SchoolName.x,
          BarName = BarName.x,
-         Suggested_code_bar,Suggested_code_rest,NABCA_spirits_bars,NABCA_spirits_rest,geographies.Census.Tracts.GEOID,geographies.Census.Tracts.OID,geographies.Census.Tracts.TRACT,addressComponents.zip,alcohol_togo)
+         Suggested_code_bar,Suggested_code_rest,NABCA_spirits_bars,NABCA_spirits_rest,geographies.Census.Tracts.GEOID,geographies.Census.Tracts.OID,geographies.Census.Tracts.TRACT,addressComponents.zip,alcohol_togo,FIPS)
 
 wave_2_data <- read_csv("Results for price stuff/Wave2_cleaned_dw.csv")
 wave_2_data_merge <- wave_2_data %>% 
@@ -75,8 +84,29 @@ both_wave_data <- both_wave_data %>%
   mutate(beer_price_change = Beer_Price2-Beer_Price,
          vodka_price_change = Vodka_price2-Vodka_price) %>% 
   select(-SID.x) %>% 
-  rename(alcohol_togo = alcohol_togo.y)
+  rename(alcohol_togo = alcohol_togo.y,
+         zip = addressComponents.zip,
+         tract_code = geographies.Census.Tracts.GEOID)
+## Connect with RUCA codes at zip level
+ruca <- read_csv("ruca2010revised.csv",skip = 1)
+ruca_clean <- ruca %>% 
+  select(tract_code =`State-County-Tract FIPS Code (lookup by address at http://www.ffiec.gov/Geocode/)`,
+         ruca = `Primary RUCA Code 2010`,
+         secondary_ruca =`Secondary RUCA Code, 2010 (see errata)`
+         )
+data("classifications")
+ruca_clean <- left_join(ruca_clean,classifications, by = "ruca")
+#Dataframe with addresses, rucacodes, and record_ids 
+addresses_with_ruca_codes <- left_join(both_wave_data, ruca_clean, by = "tract_code")
+
+addresses_with_ruca_codes$ruca <- as.factor(addresses_with_ruca_codes$ruca)
+table1(~ruca + description, data = addresses_with_ruca_codes)
+
 ```
+
+## Exploratory Data Analysis
+
+-   univariates, bivariates of outcomes/predictors and covariates.
 
 ```{r eda}
 # Outcome descriptive statistics
@@ -85,14 +115,15 @@ describe(both_wave_data$beer_price_change)
 hist(both_wave_data$vodka_price_change)
 hist(both_wave_data$beer_price_change)
 # Should we remove $17 beer data point?
+
+## PREDICTORS
 both_wave_data$Suggested_code_bar <- as.factor(both_wave_data$Suggested_code_bar)
 both_wave_data$Suggested_code_rest <- as.factor(both_wave_data$Suggested_code_rest)
 both_wave_data$NABCA_spirits_bars <- as.factor(both_wave_data$NABCA_spirits_bars)
 both_wave_data$NABCA_spirits_rest <- as.factor(both_wave_data$NABCA_spirits_rest)
 both_wave_data$alcohol_togo <- as.factor(both_wave_data$alcohol_togo)
 
-
-
+#Covariates 
 table1(~Suggested_code_bar + Suggested_code_rest + NABCA_spirits_bars + NABCA_spirits_rest + alcohol_togo, data=both_wave_data)
 
 ```
@@ -115,63 +146,182 @@ table1(~Suggested_code_bar + Suggested_code_rest + NABCA_spirits_bars + NABCA_sp
 
 -   **Level 3 Predictor**:
 
-    -   State APIS/NABCA policy
+    -   State alcohol to-go APIS/NABCA policies (allowing or not allowing sales of alcohol)
 
-# Build Null Model (Outcomes)
+# Build Null Model (Outcomes only)
 
-* In this model, we'll include the outcome (beer and vodka price changes), as well as the levels, being census tract and state 
+-   In this model, we'll include the outcome (beer and vodka price changes), as well as the levels, being census tract and state
 
 ```{r build-null}
-null <- lme(fixed = beer_price_change ~ 1, data=both_wave_data, random = ~ 1 | geographies.Census.Tracts.GEOID,  na.action = na.omit)
+# lmer version
+beer_null = lmer(beer_price_change ∼ (1|tract_code), both_wave_data, REML=FALSE)
+summary(beer_null)
+
+vodka_null = lmer(vodka_price_change ∼ (1|tract_code), both_wave_data, REML=FALSE)
 
 
-summary(null)
+summary(vodka_null)
 
+tab_model(beer_null,vodka_null, dv.labels = c("Beer Model", "Vodka Model"), show.aic = TRUE, show.dev = TRUE)
 ```
 
 # ICC calculations
 
+<https://cran.r-project.org/web/packages/misty/misty.pdf>
 
+## Census tract level for beer/vodka price change
 
-# Adding Level-1 predictors
+```{r, census-ICCs}
+# Beer price change outcome, census tract group
+multilevel.icc(both_wave_data$beer_price_change, cluster = both_wave_data$tract_code)
 
-* alcohol_togo
+# Vodka price change outcome, census tract group
+
+multilevel.icc(both_wave_data$vodka_price_change, cluster = both_wave_data$tract_code)
+# Actually finding very high clustering for vodka price change 
+
+```
+
+## State level for beer/vodka price change
+
+```{r, state-ICCs}
+# Beer price change outcome, by state
+multilevel.icc(both_wave_data$beer_price_change, cluster = both_wave_data$FIPS)
+
+# Vodka price change outcome, by state 
+
+multilevel.icc(both_wave_data$vodka_price_change, cluster = both_wave_data$FIPS)
+# 5% ICC
+
+```
+
+# Adding Level-1 predictors and level 2 grouping
+
+-   alcohol_togo is a predictor at the site level (level 1) -- whether bar or restaurant allowed sale of to-go alcohol during pandemic , on the outcome of change in beer and vodka price during pandemic
+
+-   tract_code represents the census tract, which is the 2nd level of nesting.
+
+-   For random intercepts (last two mixed models), replace the 1 in the random statement with the variable which you want to allow slopes to vary between groups. See commented code for example (though this example does not converge)
 
 ```{r lvl1-predictors}
-lvl1 <- lme(fixed = beer_price_change ~ alcohol_togo, data=both_wave_data, random = ~ 1 | geographies.Census.Tracts.GEOID,  na.action = na.omit)
+#Beer and alcohol togo
+
+lvl1_beer = lmer(beer_price_change ∼ alcohol_togo + (1|tract_code), both_wave_data, REML=FALSE)
+summary(lvl1_beer)
+
+#Vodka price and alcohol togo
+lvl1_vodka = lmer(vodka_price_change ∼ alcohol_togo + (1|tract_code), both_wave_data, REML=FALSE)
+summary(lvl1_vodka)
 
 
-summary(lvl1)
+tab_model(lvl1_beer,lvl1_vodka, dv.labels = c("Beer Alcohol togo Model", "Vodka Alcohol togo Model"), show.aic = TRUE, show.dev = TRUE)
+
 
 ```
 
 # Adding Level-2 predictors
 
+-   Categorical predictor of RUCA code
+-   This is just an example, but in fact this is actually not great practice since it's a complicated categorcical variable. Simply add other level variables to model statement, and after \| if desired
+
 ```{r lvl2-predictors}
-lvl2 <- lme(fixed = beer_price_change ~ alcohol_togo, data=both_wave_data, random = ~ 1 | geographies.Census.Tracts.GEOID,  na.action = na.omit)
 
 
-summary(lvl2)
+#Beer and RUCA code (Census tract lvl)
+
+lvl2_beer = lmer(beer_price_change ∼ ruca + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+summary(lvl2_beer)
+
+#Vodka price and RUCA code (census tract lvl)
+lvl2_vodka = lmer(vodka_price_change ∼ ruca + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+summary(lvl2_vodka)
+
+
+tab_model(lvl2_beer,lvl2_vodka, dv.labels = c("Beer Ruca Model", "Vodka Ruca Model"), show.aic = TRUE, show.dev = TRUE)
+
+
+
+
+
+```
+No significant effect from RUCA codes, likely variance is already accounted for by adding random intercept for census-tract level. 
+
+
+# Adding Level-3 predictors and nesting
+
+-   Adding more than 2 levels requires doing random = \~ 1 \| group1/group 2 \*\* This indicates nested structure \*\* <https://stats.stackexchange.com/questions/12768/three-level-hierarchical-regression-using-lmer> \*\* Alternatively, random = \~ 1 \| group1 + random = \~ 1\| group 2 indicates cross-nested structure
+
+```{r state-level-predictors}
+
+lvl3_vodka = lmer(vodka_price_change ∼ alcohol_togo + Suggested_code_bar + (1|FIPS), both_wave_data, REML=FALSE)
+summary(lvl3_vodka)
+
+lvl3_beer = lmer(beer_price_change ∼ alcohol_togo + Suggested_code_bar + (1|FIPS), both_wave_data, REML=FALSE)
+summary(lvl3_beer)
+
+
+tab_model(lvl3_beer, lvl3_vodka, dv.labels = c("Lvl 3 beer", "Lvl 3 Vodka"))
+
+
+
 
 ```
 
-# Adding Level-3 predictors
+# Do state-level policies predict if a bar/restaurant was serving to-go alcohol?
+```{r predicting-to-go-policy}
 
-```{r lvl3-predictors}
-lvl3 <- lme(fixed = beer_price_change ~ alcohol_togo, data=both_wave_data, random = ~ 1 | geographies.Census.Tracts.GEOID/SID.y,  na.action = na.omit)
+both_wave_data$Suggested_code_bar <- as.factor(both_wave_data$Suggested_code_bar)
+both_wave_data$Suggested_code_rest <- as.factor(both_wave_data$Suggested_code_rest)
+str(both_wave_data$Suggested_code_bar)
+# Does the suggested bar code predict to-go policy at location?
+togo_policy_suggested_bar <- glm(formula=alcohol_togo ~ Suggested_code_bar, data = both_wave_data, family = "binomial")
+summary(togo_policy_suggested_bar)
+# Does the suggested restaurant code predict to-go policy at location?
 
+togo_policy_suggested_rest <- glm(formula=alcohol_togo ~ Suggested_code_rest, data = both_wave_data, family = "binomial")
+summary(togo_policy_suggested_rest)
+# Other policy variables?
+togo_policy_nabca <- glm(formula=alcohol_togo ~ NABCA_spirits_rest + NABCA_spirits_bars, data = both_wave_data, family = "binomial")
+summary(togo_policy_nabca)
 
-summary(lvl3)
 
 ```
-# Interpretation of Results
+
+After running logistic regressions using state-level policy variables (2 suggested codes which researchers ML and PT developed from multiple policy data sources for restaurant and bar policies), and one model using NABCA policy state-level indicators for bars and restaurants. We found no significant association between state-level policies and whether or not a site was serving alcohol to go. 
+
+# Display/Interpretation of Results
+
+-   Lvl 1 Variance is displayed via σ2, while 2nd level variance is displayed τ00
+
+```{r tabling}
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+tab_model(lvl1_beer, lvl1_vodka, lvl2_beer, lvl2_vodka, lvl3_beer,lvl3_vodka, dv.labels = c("Lvl1 to-go policy on Price of Beer Change", "Lvl1 to-go policy on Price of Vodka Change", "Lvl2 Beer", "Lvl2 Vodka", "Lvl3 Beer with Policy Predictor","Lvl3 Vodka with Policy Predictor"))
+
+
+```
+
+# Reporting results
 
 -   Interpretation of betas
 
--   Error scores
+    Fixed effects betas are discussed similar to standard regression.
+
+    -   ICCs:
+
+        -   We found moderately high ICCs for the clustering of the price changes of vodka at the census tract level (28%-32%), but all other ICCs calculated for State and Census-tract clustering was below 5%.
 
 -   Model fit
 
--   Changes in deviance
+    -   To compare model results, we need to look at summary(model) statements individually. In this case, Our 2nd level model, including clustering at the census-tract data level and RUCA codes indicated best fit (AIC= 581). However, as stated previously, this model likely is not meaningful in the interpretation of RUCA code answers due to the limited range of codes in this dataset, likely due to clustering around college campuses.
+    
 
-# Reporting results
+
+```{r model-fit}
+summary(lvl1_beer) #716.0994	AIC
+summary(lvl1_vodka) # 645.6705 AIC
+summary(lvl2_beer)  # 581.2696 AIC
+summary(lvl3_beer) # 719.3356 AIC
+```
+
