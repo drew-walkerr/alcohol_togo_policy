@@ -128,6 +128,7 @@ table1(~Suggested_code_bar + Suggested_code_rest + NABCA_spirits_bars + NABCA_sp
 
 ```
 
+-   224 sites with complete alcohol to-go variable (179 missing, 44.4% of 403)
 -   Bars/restaurants nested within census tracts and states
 
 -   Policies of states and practices of local areas around alcohol sales are theoretically thought to influence prices
@@ -162,7 +163,16 @@ vodka_null = lmer(vodka_price_change ∼ (1|tract_code), both_wave_data, REML=FA
 
 summary(vodka_null)
 
-tab_model(beer_null,vodka_null, dv.labels = c("Beer Model", "Vodka Model"), show.aic = TRUE, show.dev = TRUE)
+zip_beer_null = lmer(beer_price_change ∼ (1|zip), both_wave_data, REML=FALSE)
+summary(zip_beer_null)
+
+zip_vodka_null = lmer(vodka_price_change ∼ (1|zip), both_wave_data, REML=FALSE)
+
+
+summary(zip_vodka_null)
+
+
+tab_model(beer_null,vodka_null, zip_beer_null, zip_vodka_null, dv.labels = c("Null Beer Model", "Null Vodka Model", "Null Beer Zip Model", "Null Vodka Zip Model"), show.aic = TRUE, show.dev = TRUE)
 ```
 
 # ICC calculations
@@ -203,7 +213,7 @@ multilevel.icc(both_wave_data$vodka_price_change, cluster = both_wave_data$FIPS)
 
 -   For random intercepts (last two mixed models), replace the 1 in the random statement with the variable which you want to allow slopes to vary between groups. See commented code for example (though this example does not converge)
 
-```{r lvl1-predictors}
+```{r model2-predictors}
 #Beer and alcohol togo
 
 lvl1_beer = lmer(beer_price_change ∼ alcohol_togo + (1|tract_code), both_wave_data, REML=FALSE)
@@ -214,7 +224,7 @@ lvl1_vodka = lmer(vodka_price_change ∼ alcohol_togo + (1|tract_code), both_wav
 summary(lvl1_vodka)
 
 
-tab_model(lvl1_beer,lvl1_vodka, dv.labels = c("Beer Alcohol togo Model", "Vodka Alcohol togo Model"), show.aic = TRUE, show.dev = TRUE)
+tab_model(lvl1_beer,lvl1_vodka, dv.labels = c("Beer Price Change Alcohol To-go Predictor Model", "Vodka Price Change Alcohol To-go Predictor Model"), show.aic = TRUE, show.dev = TRUE)
 
 
 ```
@@ -253,16 +263,19 @@ No significant effect from RUCA codes, likely variance is already accounted for 
 
 ```{r state-level-predictors}
 
-lvl3_vodka = lmer(vodka_price_change ∼ alcohol_togo + Suggested_code_bar + (1|FIPS), both_wave_data, REML=FALSE)
+lvl3_vodka = lmer(vodka_price_change ∼ alcohol_togo + Suggested_code_bar+(1|tract_code), both_wave_data, REML=FALSE)
 summary(lvl3_vodka)
 
-lvl3_beer = lmer(beer_price_change ∼ alcohol_togo + Suggested_code_bar + (1|FIPS), both_wave_data, REML=FALSE)
+lvl3_beer = lmer(beer_price_change ∼ alcohol_togo + Suggested_code_bar + (1|tract_code), both_wave_data, REML=FALSE)
 summary(lvl3_beer)
 
 
-tab_model(lvl3_beer, lvl3_vodka, dv.labels = c("Lvl 3 beer", "Lvl 3 Vodka"))
+tab_model(lvl3_beer, lvl3_vodka, dv.labels = c("Beer Price Change State-level Policy Predictors", "Vodka Price Change State-level Policy Predictors"))
 
 
+togo_answered <- both_wave_data %>% 
+  filter(alcohol_togo != "NA") 
+sum(is.na(togo_answered$tract_code))
 
 
 ```
@@ -283,6 +296,8 @@ summary(togo_policy_suggested_rest)
 # Other policy variables?
 togo_policy_nabca <- glm(formula=alcohol_togo ~ NABCA_spirits_rest + NABCA_spirits_bars, data = both_wave_data, family = "binomial")
 summary(togo_policy_nabca)
+
+tab_model(togo_policy_suggested_bar, togo_policy_suggested_rest,togo_policy_nabca, dv.labels = c("Likelihood of Site To-go Practice predicted by State-level Policy Suggested Restaurant Predictor", "Likelihood of Site To-go Practice predicted by State-level Policy Suggested Bar Predictor", "Likelihood of Site To-go practice predicted by NABCA spirits policies"))
 
 
 ```
