@@ -40,9 +40,7 @@ library(TMB)
 
 -   Continuous outcomes (though these allow for logistic regression also, incorporation of different logit functions) :
 
--   
-
-          price of beer and price of vodka
+          - price of beer and price of vodka
 
 -   Predictors (binary):
 
@@ -102,6 +100,16 @@ addresses_with_ruca_codes <- left_join(both_wave_data, ruca_clean, by = "tract_c
 addresses_with_ruca_codes$ruca <- as.factor(addresses_with_ruca_codes$ruca)
 table1(~ruca + description, data = addresses_with_ruca_codes)
 
+
+# Add Census tract-level covariates from Pamela 
+ct_covariates <- read_csv("ct-level covar.csv")
+ct_covariates_clean <- ct_covariates %>% 
+  rename(tract_code=fips_ct)
+ct_covariates_clean$tract_code <- as.character(ct_covariates_clean$tract_code)
+
+addresses_with_ruca_codes <- left_join(addresses_with_ruca_codes,ct_covariates_clean, by = "tract_code")
+
+
 ```
 
 ## Exploratory Data Analysis
@@ -129,6 +137,7 @@ table1(~Suggested_code_bar + Suggested_code_rest + NABCA_spirits_bars + NABCA_sp
 ```
 
 -   224 sites with complete alcohol to-go variable (179 missing, 44.4% of 403)
+
 -   Bars/restaurants nested within census tracts and states
 
 -   Policies of states and practices of local areas around alcohol sales are theoretically thought to influence prices
@@ -232,18 +241,32 @@ tab_model(lvl1_beer,lvl1_vodka, dv.labels = c("Beer Price Change Alcohol To-go P
 # Adding Level-2 predictors
 
 -   Categorical predictor of RUCA code
+
 -   This is just an example, but in fact this is actually not great practice since it's a complicated categorcical variable. Simply add other level variables to model statement, and after \| if desired
+
+-   Adding census-level covariates (from Pamela) of:
+
+    -   **Diversity:** This is Simpson's Diversity Index. It measures the
+        probability that two people chosen at random will be from different racial
+        and ethnic groups. It is bounded between 0 and 1.
+
+    -   **Disadv:** This is the "disadvantage" index that Deb Furr-Holden
+        always uses. It's calculated as ((%college-degree-or-more +
+        %owner-occupied) -- (%poverty + %female-headed-HHs))/4. It ranges from -1
+        to 1; the negative values are "disadvantaged" and the positive values are
+        advantaged. I hate the term disadvantage when ascribed to groups of people
+        or places, which is why I keep putting it in quotes BTW.
 
 ```{r lvl2-predictors}
 
 
 #Beer and RUCA code (Census tract lvl)
 
-lvl2_beer = lmer(beer_price_change ∼ ruca + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+lvl2_beer = lmer(beer_price_change ∼ diversity + disadv + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
 summary(lvl2_beer)
 
 #Vodka price and RUCA code (census tract lvl)
-lvl2_vodka = lmer(vodka_price_change ∼ ruca + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+lvl2_vodka = lmer(vodka_price_change ∼ diversity + disadv + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
 summary(lvl2_vodka)
 
 
@@ -254,8 +277,8 @@ tab_model(lvl2_beer,lvl2_vodka, dv.labels = c("Beer Ruca Model", "Vodka Ruca Mod
 
 
 ```
-No significant effect from RUCA codes, likely variance is already accounted for by adding random intercept for census-tract level. 
 
+No significant effect from RUCA codes or covariates, likely variance is already accounted for by adding random intercept for census-tract level.
 
 # Adding Level-3 predictors and nesting
 
@@ -263,10 +286,10 @@ No significant effect from RUCA codes, likely variance is already accounted for 
 
 ```{r state-level-predictors}
 
-lvl3_vodka = lmer(vodka_price_change ∼ alcohol_togo + Suggested_code_bar+(1|tract_code), both_wave_data, REML=FALSE)
+lvl3_vodka = lmer(vodka_price_change ∼ alcohol_togo + Suggested_code_bar+(1|tract_code), addresses_with_ruca_codes, REML=FALSE)
 summary(lvl3_vodka)
 
-lvl3_beer = lmer(beer_price_change ∼ alcohol_togo + Suggested_code_bar + (1|tract_code), both_wave_data, REML=FALSE)
+lvl3_beer = lmer(beer_price_change ∼ alcohol_togo + Suggested_code_bar + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
 summary(lvl3_beer)
 
 
@@ -281,20 +304,21 @@ sum(is.na(togo_answered$tract_code))
 ```
 
 # Do state-level policies predict if a bar/restaurant was serving to-go alcohol?
+
 ```{r predicting-to-go-policy}
 
 both_wave_data$Suggested_code_bar <- as.factor(both_wave_data$Suggested_code_bar)
 both_wave_data$Suggested_code_rest <- as.factor(both_wave_data$Suggested_code_rest)
 str(both_wave_data$Suggested_code_bar)
 # Does the suggested bar code predict to-go policy at location?
-togo_policy_suggested_bar <- glm(formula=alcohol_togo ~ Suggested_code_bar, data = both_wave_data, family = "binomial")
+togo_policy_suggested_bar <- glm(formula=alcohol_togo ~ Suggested_code_bar + diversity + disadv, data = addresses_with_ruca_codes, family = "binomial")
 summary(togo_policy_suggested_bar)
 # Does the suggested restaurant code predict to-go policy at location?
 
-togo_policy_suggested_rest <- glm(formula=alcohol_togo ~ Suggested_code_rest, data = both_wave_data, family = "binomial")
+togo_policy_suggested_rest <- glm(formula=alcohol_togo ~ Suggested_code_rest + diversity + disadv, data = addresses_with_ruca_codes, family = "binomial")
 summary(togo_policy_suggested_rest)
 # Other policy variables?
-togo_policy_nabca <- glm(formula=alcohol_togo ~ NABCA_spirits_rest + NABCA_spirits_bars, data = both_wave_data, family = "binomial")
+togo_policy_nabca <- glm(formula=alcohol_togo ~ NABCA_spirits_rest + NABCA_spirits_bars + diversity + disadv, data = addresses_with_ruca_codes, family = "binomial")
 summary(togo_policy_nabca)
 
 tab_model(togo_policy_suggested_bar, togo_policy_suggested_rest,togo_policy_nabca, dv.labels = c("Likelihood of Site To-go Practice predicted by State-level Policy Suggested Restaurant Predictor", "Likelihood of Site To-go Practice predicted by State-level Policy Suggested Bar Predictor", "Likelihood of Site To-go practice predicted by NABCA spirits policies"))
@@ -302,7 +326,7 @@ tab_model(togo_policy_suggested_bar, togo_policy_suggested_rest,togo_policy_nabc
 
 ```
 
-After running logistic regressions using state-level policy variables (2 suggested codes which researchers ML and PT developed from multiple policy data sources for restaurant and bar policies), and one model using NABCA policy state-level indicators for bars and restaurants. We found no significant association between state-level policies and whether or not a site was serving alcohol to go. 
+After running logistic regressions using state-level policy variables (2 suggested codes which researchers ML and PT developed from multiple policy data sources for restaurant and bar policies), and one model using NABCA policy state-level indicators for bars and restaurants. We found no significant association between state-level policies and whether or not a site was serving alcohol to go.
 
 # Display/Interpretation of Results
 
@@ -330,8 +354,6 @@ tab_model(lvl1_beer, lvl1_vodka, lvl2_beer, lvl2_vodka, lvl3_beer,lvl3_vodka, dv
 -   Model fit
 
     -   To compare model results, we need to look at summary(model) statements individually. In this case, Our 2nd level model, including clustering at the census-tract data level and RUCA codes indicated best fit (AIC= 581). However, as stated previously, this model likely is not meaningful in the interpretation of RUCA code answers due to the limited range of codes in this dataset, likely due to clustering around college campuses.
-    
-
 
 ```{r model-fit}
 summary(lvl1_beer) #716.0994	AIC
@@ -340,3 +362,53 @@ summary(lvl2_beer)  # 581.2696 AIC
 summary(lvl3_beer) # 719.3356 AIC
 ```
 
+## Follow-up analyses
+
+After sending initial results to the team, was asked to perform some additional analyses:
+
+-   Can you run a simple percentage of bars and restaurants (separately) that sell to-go by state policy? I want to understand the last result a little more.
+
+```{r cross-tabs}
+# Suggested code policies with site-specific to-go practice 
+sjPlot::tab_xtab(var.row = addresses_with_ruca_codes$alcohol_togo, var.col = addresses_with_ruca_codes$Suggested_code_bar, title = "Site practice of Togo sales by Suggested Code Bar", show.row.prc = TRUE)
+
+sjPlot::tab_xtab(var.row = addresses_with_ruca_codes$alcohol_togo, var.col = addresses_with_ruca_codes$Suggested_code_rest, title = "Site practice of Togo sales by Suggested Code Rest", show.row.prc = TRUE)
+# NABCA POLICIES CROSSTABS with Site-specific togo policy
+sjPlot::tab_xtab(var.row = addresses_with_ruca_codes$alcohol_togo, var.col = addresses_with_ruca_codes$NABCA_spirits_bars, title = "Site practice of Togo sales by NABCA Spirits bars policy", show.row.prc = TRUE)
+
+sjPlot::tab_xtab(var.row = addresses_with_ruca_codes$alcohol_togo, var.col = addresses_with_ruca_codes$NABCA_spirits_rest, title = "Site practice of Togo sales by NABCA spirits rest policy", show.row.prc = TRUE)
+```
+
+• I'm not surprised that there's more clustering on spirits. What is the number/percent of bars/restaurants that did not change their spirits prices?
+
+```{r no-changers}
+# Beer change
+hist(addresses_with_ruca_codes$beer_price_change)
+
+#Vodka change
+hist(addresses_with_ruca_codes$vodka_price_change)
+
+addresses_with_ruca_codes_no_change <- addresses_with_ruca_codes %>% 
+  mutate(no_change_vodka = case_when(vodka_price_change == 0 ~ "1",
+                                     TRUE ~ "0"),
+         no_change_beer = case_when(beer_price_change == 0 ~ "1",
+                                    TRUE ~ "0"))
+#Differ by outlet characterisitcs, Census tract characteristics, or school characteristics 
+
+```
+
+I'm wondering if we can run some descriptive statistics to see if these outlets differ from those that changed their prices either in terms of outlet characteristics, school characteristics (e.g., public vs. private), or area-level characteristics.
+
+```{r descriptive-no-changers}
+
+```
+
+• I am somewhat surprised to see that to-go sales were associated with higher beer prices and want to think about why that might be. Sure, beer is usually the cheapest, so there's more margin to raise prices. However, most of the changes in consumption during COVID were wine and spirits while beer consumption/sales fell, so this isn't going to be a huge revenue generator for outlets. A third possibility is that both the beer price changes and the to-go practices were concentrated in specific kinds of areas/outlets. From your exploratory analyses, did anything stand out?
+
+• I have variables for the percent of days in 2020 that bars and restaurants were allowed to open. I'm wondering if that would explain both the to-go sales and the changes in beer price? Based on how easily I can find old records, it's possible to recode this for Feb-August or September.
+
+Here's stuff on the covariates I was supposed to pull I'm not sure if these analyses adjust for covariates. It seems like the do from file names, but maybe the covariates were omitted from the results tables? Either way, here's the census tract covariates we discussed. Apologies for getting repeatedly sidetracked from this.
+
+Here's the variables that I calculated: • Diversity: This is Simpson's Diversity Index. It measures the probability that two people chosen at random will be from different racial and ethnic groups. It is bounded between 0 and 1. • Disadv: This is the "disadvantage" index that Deb Furr-Holden always uses. It's calculated as ((%college-degree-or-more + %owner-occupied) -- (%poverty + %female-headed-HHs))/4. It ranges from -1 to 1; the negative values are "disadvantaged" and the positive values are advantaged. I hate the term disadvantage when ascribed to groups of people or places, which is why I keep putting it in quotes BTW.
+
+The median HH income variable seems like the units have to be \$10,000. That would make the CT data about match what I'm assuming are county-level data in their summary tables. Here's the ACS data dictionary from 2011; I couldn't find a more recent one in a quick search. I changed variable names to be easier to understand; LMK if any aren't intuitive.
