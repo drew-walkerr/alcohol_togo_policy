@@ -381,6 +381,7 @@ sjPlot::tab_xtab(var.row = addresses_with_ruca_codes$alcohol_togo, var.col = add
 
 • I'm not surprised that there's more clustering on spirits. What is the number/percent of bars/restaurants that did not change their spirits prices?
 
+* I'm wondering if we can run some descriptive statistics to see if these outlets differ from those that changed their prices either in terms of outlet characteristics, school characteristics (e.g., public vs. private), or area-level characteristics.
 ```{r no-changers}
 # Beer change
 hist(addresses_with_ruca_codes$beer_price_change)
@@ -393,15 +394,36 @@ addresses_with_ruca_codes_no_change <- addresses_with_ruca_codes %>%
                                      TRUE ~ "0"),
          no_change_beer = case_when(beer_price_change == 0 ~ "1",
                                     TRUE ~ "0"))
+
+addresses_with_ruca_codes_no_change$no_change_vodka <- as.factor(addresses_with_ruca_codes_no_change$no_change_vodka)
+
+addresses_with_ruca_codes_no_change$no_change_beer <- as.factor(addresses_with_ruca_codes_no_change$no_change_beer)
+
+
+table(addresses_with_ruca_codes_no_change$no_change_vodka)
+table(addresses_with_ruca_codes_no_change$no_change_beer)
 #Differ by outlet characterisitcs, Census tract characteristics, or school characteristics 
 
+# Outlet characteristics.. not many here. RC_Masks_customer, RC_Masks_staff, RC_distance, Cigarettes_inside, Ecig_inside
+outlet_no_change_beer <- glm(formula=no_change_beer ~ RC_Masks_customer + RC_Masks_staff+RC_distance+Cigarettes_inside+Ecig_inside, data = addresses_with_ruca_codes_no_change, family = "binomial")
+summary(outlet_no_change_beer)
+
+outlet_no_change_vodka <- glm(formula=no_change_vodka ~ RC_Masks_customer + RC_Masks_staff+RC_distance+Cigarettes_inside+Ecig_inside, data = addresses_with_ruca_codes_no_change, family = "binomial")
+summary(outlet_no_change_vodka)
+
+# CT characteristics
+ct_no_change_beer <- glm(formula=no_change_beer ~ diversity + disadv, data = addresses_with_ruca_codes_no_change, family = "binomial")
+
+summary(ct_no_change_beer)
+ct_no_change_vodka <- glm(formula=no_change_vodka ~ diversity + disadv, data = addresses_with_ruca_codes_no_change, family = "binomial")
+
+summary(ct_no_change_vodka)
+
+
 ```
 
-I'm wondering if we can run some descriptive statistics to see if these outlets differ from those that changed their prices either in terms of outlet characteristics, school characteristics (e.g., public vs. private), or area-level characteristics.
 
-```{r descriptive-no-changers}
 
-```
 
 • I am somewhat surprised to see that to-go sales were associated with higher beer prices and want to think about why that might be. Sure, beer is usually the cheapest, so there's more margin to raise prices. However, most of the changes in consumption during COVID were wine and spirits while beer consumption/sales fell, so this isn't going to be a huge revenue generator for outlets. A third possibility is that both the beer price changes and the to-go practices were concentrated in specific kinds of areas/outlets. From your exploratory analyses, did anything stand out?
 
