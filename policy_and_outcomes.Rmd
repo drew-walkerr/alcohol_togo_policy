@@ -54,12 +54,12 @@ outcomes_data$mixed_drinks <- as.factor(outcomes_data$mixed_drinks)
 outcomes_data_clean <- outcomes_data %>% 
   rename(State_abbr = State)
 
-joined_policy_and_outcomes <- left_join(alc_policies,outcomes_data_clean, by = "State_abbr")
+joined_policy_and_outcomes <- left_join(outcomes_data_clean,alc_policies, by = "State_abbr")
 ```
 
-```{r, cleaning-abca}
+```{r, cleaning-nabca}
 
-#Clean ABCA data
+#Clean NABCA data
 clean_joined_policy_and_outcomes <- joined_policy_and_outcomes %>% 
  mutate(
    NABCA_spirits_bars = case_when(
@@ -74,6 +74,46 @@ clean_joined_policy_and_outcomes <- joined_policy_and_outcomes %>%
 
 ```{r, outcomes_data}
 write_csv(clean_joined_policy_and_outcomes,  "joined_togo_policy_and_bar_outcomes_data.csv", na = "") 
-library(here)
-here()
+
+
+#Filtered for places that do not sell food 
+
+wave1_food_data <- read_csv("Wave1_cleaned.csv")
+
+cleaned_joined_policy_outcomes_merge_wave1 <- left_join(clean_joined_policy_and_outcomes,wave1_food_data, by = "UID")
+
+cleaned_joined_policy_outcomes_no_food_or_more_midnights <- cleaned_joined_policy_outcomes_merge_wave1 %>% 
+  filter(Food == 0 | OpenMidnitePerWeek > 3)
+
+write_csv(cleaned_joined_policy_outcomes_no_food_or_more_midnights, "no_food_or_more_midnights_data.csv", na = "")
+
+and_cleaned_joined_policy_outcomes_no_food_and_more_midnights <- cleaned_joined_policy_outcomes_merge_wave1 %>% 
+  filter(OpenMidnitePerWeek > 3)
+
+write_csv(and_cleaned_joined_policy_outcomes_no_food_and_more_midnights, "bars more than 3 midnights.csv", na = "")
+
+restaurants <- cleaned_joined_policy_outcomes_merge_wave1 %>% 
+  filter(OpenMidnitePerWeek < 4)
+
+write_csv(restaurants, "restaurants.csv", na = "")
+
 ```
+
+```{r, pricechanges}
+pricechanges <- cleaned_joined_policy_outcomes_merge_wave1 %>% 
+  mutate(beer_price_change = Beer_Price.x - Beer_Price.y,
+         vodka_price_change = Vodka_price.x - Vodka_price.y)
+write_csv(pricechanges, "pricechanges.csv", na = "")
+```
+
+
+# Wave 2 Excluded outlets from analytic sample
+```{r, excluded-wave2 }
+na_clean_joined_policy_outcomes <- clean_joined_policy_and_outcomes %>% 
+  filter(is.na(alcohol_togo))
+# is.na() for beer/wine/mixed_drinks, this is 182. 
+# for alcohol_togo = 179
+# Policies are about same 
+
+```
+

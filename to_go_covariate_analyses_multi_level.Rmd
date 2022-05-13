@@ -311,17 +311,17 @@ both_wave_data$Suggested_code_bar <- as.factor(both_wave_data$Suggested_code_bar
 both_wave_data$Suggested_code_rest <- as.factor(both_wave_data$Suggested_code_rest)
 str(both_wave_data$Suggested_code_bar)
 # Does the suggested bar code predict to-go policy at location?
-togo_policy_suggested_bar <- glm(formula=alcohol_togo ~ Suggested_code_bar + diversity + disadv, data = addresses_with_ruca_codes, family = "binomial")
+togo_policy_suggested_bar <- glm(formula=alcohol_togo ~ Suggested_code_bar, data = addresses_with_ruca_codes, family = "binomial")
 summary(togo_policy_suggested_bar)
 # Does the suggested restaurant code predict to-go policy at location?
 
-togo_policy_suggested_rest <- glm(formula=alcohol_togo ~ Suggested_code_rest + diversity + disadv, data = addresses_with_ruca_codes, family = "binomial")
+togo_policy_suggested_rest <- glm(formula=alcohol_togo ~ Suggested_code_rest, data = addresses_with_ruca_codes, family = "binomial")
 summary(togo_policy_suggested_rest)
 # Other policy variables?
-togo_policy_nabca <- glm(formula=alcohol_togo ~ NABCA_spirits_rest + NABCA_spirits_bars + diversity + disadv, data = addresses_with_ruca_codes, family = "binomial")
+togo_policy_nabca <- glm(formula=alcohol_togo ~ NABCA_spirits_rest + NABCA_spirits_bars, data = addresses_with_ruca_codes, family = "binomial")
 summary(togo_policy_nabca)
 
-tab_model(togo_policy_suggested_bar, togo_policy_suggested_rest,togo_policy_nabca, dv.labels = c("Likelihood of Site To-go Practice predicted by State-level Policy Suggested Restaurant Predictor", "Likelihood of Site To-go Practice predicted by State-level Policy Suggested Bar Predictor", "Likelihood of Site To-go practice predicted by NABCA spirits policies"))
+tab_model(togo_policy_suggested_bar, togo_policy_suggested_rest,togo_policy_nabca, dv.labels = c("Likelihood of Site To-go Practice predicted by State-level Policy Suggested Bar Predictor", "Likelihood of Site To-go Practice predicted by State-level Policy Suggested Restaurant Predictor", "Likelihood of Site To-go practice predicted by NABCA spirits policies"))
 
 
 ```
@@ -368,6 +368,7 @@ After sending initial results to the team, was asked to perform some additional 
 
 -   Can you run a simple percentage of bars and restaurants (separately) that sell to-go by state policy? I want to understand the last result a little more.
 
+
 ```{r cross-tabs}
 # Suggested code policies with site-specific to-go practice 
 sjPlot::tab_xtab(var.row = addresses_with_ruca_codes$alcohol_togo, var.col = addresses_with_ruca_codes$Suggested_code_bar, title = "Site practice of Togo sales by Suggested Code Bar", show.row.prc = TRUE)
@@ -389,6 +390,12 @@ hist(addresses_with_ruca_codes$beer_price_change)
 #Vodka change
 hist(addresses_with_ruca_codes$vodka_price_change)
 
+# Income 
+hist(addresses_with_ruca_codes$median_hhincome)
+# Disadvantage
+
+# Diversity 
+
 addresses_with_ruca_codes_no_change <- addresses_with_ruca_codes %>% 
   mutate(no_change_vodka = case_when(vodka_price_change == 0 ~ "1",
                                      TRUE ~ "0"),
@@ -408,6 +415,9 @@ table(addresses_with_ruca_codes_no_change$no_change_beer)
 outlet_no_change_beer <- glm(formula=no_change_beer ~ RC_Masks_customer + RC_Masks_staff+RC_distance+Cigarettes_inside+Ecig_inside, data = addresses_with_ruca_codes_no_change, family = "binomial")
 summary(outlet_no_change_beer)
 
+
+
+# Outlet characteristics 
 outlet_no_change_vodka <- glm(formula=no_change_vodka ~ RC_Masks_customer + RC_Masks_staff+RC_distance+Cigarettes_inside+Ecig_inside, data = addresses_with_ruca_codes_no_change, family = "binomial")
 summary(outlet_no_change_vodka)
 
@@ -419,18 +429,123 @@ ct_no_change_vodka <- glm(formula=no_change_vodka ~ diversity + disadv, data = a
 
 summary(ct_no_change_vodka)
 
+# Comparison tables
+label(addresses_with_ruca_codes_no_change$no_change_vodka)       <- "No Change in Price Vodka"
+label(addresses_with_ruca_codes_no_change$no_change_beer)       <- "No Change in Price Beer"
+
+levels(addresses_with_ruca_codes_no_change$no_change_vodka) <- c("Vodka Price Changed", "No Change in Vodka Price")
+levels(addresses_with_ruca_codes_no_change$no_change_beer) <- c("Beer Price Changed", "No Change in Beer Price")
+
+# No change vodka
+table1(~diversity + disadv + median_hhincome + RC_Masks_customer + RC_Masks_staff+RC_distance+Cigarettes_inside+Ecig_inside|no_change_vodka, data = addresses_with_ruca_codes_no_change )
+
+# No change beer
+table1(~diversity + disadv + median_hhincome + RC_Masks_customer + RC_Masks_staff+RC_distance+Cigarettes_inside+Ecig_inside|no_change_beer, data = addresses_with_ruca_codes_no_change )
 
 ```
 
 
 
 
-• I am somewhat surprised to see that to-go sales were associated with higher beer prices and want to think about why that might be. Sure, beer is usually the cheapest, so there's more margin to raise prices. However, most of the changes in consumption during COVID were wine and spirits while beer consumption/sales fell, so this isn't going to be a huge revenue generator for outlets. A third possibility is that both the beer price changes and the to-go practices were concentrated in specific kinds of areas/outlets. From your exploratory analyses, did anything stand out?
+• I am somewhat surprised to see that to-go sales were associated with higher beer prices and want to think about why that might be. Sure, beer is usually the cheapest, so there's more margin to raise prices. However, most of the changes in consumption during COVID were wine and spirits while beer consumption/sales fell, so this isn't going to be a huge revenue generator for outlets. A third possibility is that both the beer price changes and the to-go practices were concentrated in specific kinds of areas/outlets. 
+
+From your exploratory analyses, did anything stand out?
+
+
+
+
 
 • I have variables for the percent of days in 2020 that bars and restaurants were allowed to open. I'm wondering if that would explain both the to-go sales and the changes in beer price? Based on how easily I can find old records, it's possible to recode this for Feb-August or September.
+
+# Covariates models
+
+```{r covariates-ct-models}
+
+# Changing median household income to hundred thousands --rescaling due to model convergence issues
+addresses_with_ruca_codes_no_change <- addresses_with_ruca_codes_no_change %>% 
+  mutate(median_hhincome_millions = median_hhincome/100)
+
+## CT Tract covariates disadvantage, diversity, and hhincome 
+vodka_price_ct_covariates = lmer(vodka_price_change ∼ disadv + diversity + median_hhincome_millions + (1|tract_code), addresses_with_ruca_codes_no_change, REML=FALSE)
+summary(vodka_price_ct_covariates)
+
+beer_price_ct_covariates = lmer(beer_price_change ∼ disadv + diversity + median_hhincome_millions + (1|tract_code), addresses_with_ruca_codes_no_change, REML=FALSE)
+summary(beer_price_ct_covariates)
+
+## 3rd set: CT Tract + alcohol togo predictors  
+vodka_price_ct_covariates_togo = lmer(vodka_price_change ∼ alcohol_togo + disadv + diversity + median_hhincome_millions + (1|tract_code), addresses_with_ruca_codes_no_change, REML=FALSE)
+summary(vodka_price_ct_covariates_togo)
+
+beer_price_ct_covariates_togo = lmer(beer_price_change ∼ alcohol_togo + disadv + diversity + median_hhincome_millions + (1|tract_code), addresses_with_ruca_codes_no_change, REML=FALSE)
+summary(beer_price_ct_covariates_togo)
+
+#Vodka price and togo practice predictor
+vodka_togo = lmer(vodka_price_change ∼ alcohol_togo + (1|tract_code), addresses_with_ruca_codes_no_change, REML=FALSE)
+summary(vodka_togo)
+#beer price and togo practice predictor
+beer_togo = lmer(beer_price_change ∼ alcohol_togo + (1|tract_code), addresses_with_ruca_codes_no_change, REML=FALSE)
+summary(beer_togo)
+
+tab_model(vodka_togo, beer_togo, vodka_price_ct_covariates, beer_price_ct_covariates,vodka_price_ct_covariates_togo,beer_price_ct_covariates_togo, dv.labels = c("1a. Vodka price change by alcohol togo", "1b.Beer price change by alcohol togo", "2a. Vodka Price Change Census Tract-level Predictors", "2b.Beer Price Change Census Tract-level Predictors","3c. Vodka Price Change Census Tract and Togo", "3d. Beer Price Change Census Tract and Togo"), show.aic = TRUE, show.dev = TRUE)
+
+write_csv(addresses_with_ruca_codes_no_change, "alcohol_togo_with_covariates.csv", na = ".")
+```
 
 Here's stuff on the covariates I was supposed to pull I'm not sure if these analyses adjust for covariates. It seems like the do from file names, but maybe the covariates were omitted from the results tables? Either way, here's the census tract covariates we discussed. Apologies for getting repeatedly sidetracked from this.
 
 Here's the variables that I calculated: • Diversity: This is Simpson's Diversity Index. It measures the probability that two people chosen at random will be from different racial and ethnic groups. It is bounded between 0 and 1. • Disadv: This is the "disadvantage" index that Deb Furr-Holden always uses. It's calculated as ((%college-degree-or-more + %owner-occupied) -- (%poverty + %female-headed-HHs))/4. It ranges from -1 to 1; the negative values are "disadvantaged" and the positive values are advantaged. I hate the term disadvantage when ascribed to groups of people or places, which is why I keep putting it in quotes BTW.
 
+
+
+
 The median HH income variable seems like the units have to be \$10,000. That would make the CT data about match what I'm assuming are county-level data in their summary tables. Here's the ACS data dictionary from 2011; I couldn't find a more recent one in a quick search. I changed variable names to be easier to understand; LMK if any aren't intuitive.
+```{r difference-togos}
+addresses_with_ruca_codes_no_change$alcohol_togo <- as.factor(addresses_with_ruca_codes_no_change$alcohol_togo)
+
+
+label(addresses_with_ruca_codes_no_change$alcohol_togo) <- "Sold Alcohol To-go"
+levels(addresses_with_ruca_codes_no_change$alcohol_togo) <- c("Did Not Sell Alcohol Togo", "Sold Alcohol Togo")
+table1(~no_change_beer + no_change_vodka|alcohol_togo, data = addresses_with_ruca_codes_no_change)
+
+table1(~NABCA_spirits_rest + NABCA_spirits_bars + Suggested_code_rest + Suggested_code_bar |alcohol_togo, data = addresses_with_ruca_codes_no_change)
+
+bars_list <- read_csv("bars more than 3 midnights.csv")
+bars_list_cleaned <- bars_list %>% 
+  select(UID,SID.x) %>% 
+  mutate(bar_or_restaurant = "bar")
+
+
+restaurant_list <- read_csv("restaurants.csv")
+restaurant_list_cleaned <- restaurant_list %>% 
+  select(UID,SID.x) %>% 
+  mutate(bar_or_restaurant = "restaurant")
+
+rest_and_bars <- rbind(bars_list_cleaned,restaurant_list_cleaned)
+
+addresses_with_ruca_codes_no_change_bar_and_rest <- left_join(addresses_with_ruca_codes_no_change,rest_and_bars, by = "UID")
+# Make variables factors
+addresses_with_ruca_codes_no_change_bar_and_rest$alcohol_togo <- as.factor(addresses_with_ruca_codes_no_change_bar_and_rest$alcohol_togo)
+
+addresses_with_ruca_codes_no_change_bar_and_rest$NABCA_spirits_bars <- as.factor(addresses_with_ruca_codes_no_change_bar_and_rest$NABCA_spirits_bars)
+
+addresses_with_ruca_codes_no_change_bar_and_rest$NABCA_spirits_rest <- as.factor(addresses_with_ruca_codes_no_change_bar_and_rest$NABCA_spirits_rest)
+
+addresses_with_ruca_codes_no_change_bar_and_rest$Suggested_code_bar <- as.factor(addresses_with_ruca_codes_no_change_bar_and_rest$Suggested_code_bar)
+
+addresses_with_ruca_codes_no_change_bar_and_rest$Suggested_code_rest <- as.factor(addresses_with_ruca_codes_no_change_bar_and_rest$Suggested_code_rest)
+
+table1(~alcohol_togo + NABCA_spirits_bars + NABCA_spirits_rest + Suggested_code_bar+Suggested_code_rest|bar_or_restaurant,addresses_with_ruca_codes_no_change_bar_and_rest)
+
+
+```
+
+
+
+# Adding distance to school
+
+Distance to school could be a proxy variable that helps explain likelihood of targeting students as customers at these bars/restaurants (closer to school = higher likelihood at targeting students with advertising and sales)
+
+```{r distance-to-school}
+distance_data <- read_csv("Wave 1 Data and Sampling Frame 10 26 20")
+```
+
