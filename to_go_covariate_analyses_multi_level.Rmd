@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(ggplot2)
+library(measurements)
+library(units)
 library(table1)
 library(nlme)
 library(here)
@@ -107,10 +109,26 @@ ct_covariates_clean <- ct_covariates %>%
   rename(tract_code=fips_ct)
 ct_covariates_clean$tract_code <- as.character(ct_covariates_clean$tract_code)
 
-addresses_with_ruca_codes <- left_join(addresses_with_ruca_codes,ct_covariates_clean, by = "tract_code")
-
+addresses_with_ruca_codes1 <- left_join(addresses_with_ruca_codes,ct_covariates_clean, by = "tract_code")
 
 ```
+
+# Adding distance to school
+
+Distance to school could be a proxy variable that helps explain likelihood of targeting students as customers at these bars/restaurants (closer to school = higher likelihood at targeting students with advertising and sales)
+
+```{r distance-to-school}
+distance_data <- read_csv("Wave 1 Data and Sampling Frame 10 26 20.csv")
+
+measurements::conv_unit(420,"ft","mi")
+
+distance_data_clean <- distance_data %>% 
+  mutate(distance_clean = case_when(str_detect(Distance, "ft| ft| feet|feet")~ conv_unit(as.numeric(str_remove(distance_data$Distance, "ft| ft| feet|feet")),"ft","mi"), TRUE ~ as.numeric(Distance))) %>% 
+  select(UID, Distance, distance_clean)
+
+addresses_with_ruca_codes <- left_join(addresses_with_ruca_codes1, distance_data_clean, by = "UID")
+```
+
 
 ## Exploratory Data Analysis
 
@@ -118,6 +136,7 @@ addresses_with_ruca_codes <- left_join(addresses_with_ruca_codes,ct_covariates_c
 
 ```{r eda}
 # Outcome descriptive statistics
+describe(addresses_with_ruca_codes$distance_clean)
 describe(both_wave_data$vodka_price_change)
 describe(both_wave_data$beer_price_change)
 hist(both_wave_data$vodka_price_change)
@@ -232,8 +251,22 @@ summary(lvl1_beer)
 lvl1_vodka = lmer(vodka_price_change ∼ alcohol_togo + (1|tract_code), both_wave_data, REML=FALSE)
 summary(lvl1_vodka)
 
+lvl1_beer_distance = lmer(beer_price_change ∼ distance_clean + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+summary(lvl1_beer_distance)
 
-tab_model(lvl1_beer,lvl1_vodka, dv.labels = c("Beer Price Change Alcohol To-go Predictor Model", "Vodka Price Change Alcohol To-go Predictor Model"), show.aic = TRUE, show.dev = TRUE)
+#Vodka price and alcohol togo
+lvl1_vodka_distance = lmer(vodka_price_change ∼ distance_clean + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+summary(lvl1_vodka_distance)
+
+lvl1_beer_togo_distance = lmer(beer_price_change ∼ alcohol_togo + distance_clean + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+summary(lvl1_beer_togo_distance)
+
+#Vodka price and alcohol togo
+lvl1_vodka_togo_distance = lmer(vodka_price_change ∼ alcohol_togo + distance_clean +(1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+summary(lvl1_vodka_togo_distance)
+
+
+tab_model(lvl1_beer,lvl1_vodka,lvl1_beer_distance,lvl1_vodka_distance,lvl1_beer_togo_distance,lvl1_vodka_togo_distance, dv.labels = c("Beer Price Change Alcohol To-go Predictor Model", "Vodka Price Change Alcohol To-go Predictor Model","Beer Price and Distance to School","Vodka Price and Distance to School","Beer Distance and Togo","Vodka Distance and Togo"), show.aic = TRUE, show.dev = TRUE)
 
 
 ```
@@ -310,6 +343,12 @@ sum(is.na(togo_answered$tract_code))
 both_wave_data$Suggested_code_bar <- as.factor(both_wave_data$Suggested_code_bar)
 both_wave_data$Suggested_code_rest <- as.factor(both_wave_data$Suggested_code_rest)
 str(both_wave_data$Suggested_code_bar)
+
+# Does distance to campus predict to-go policy? Not sig. 
+togo_policy_distance <- glm(formula=alcohol_togo ~ distance_clean, data = addresses_with_ruca_codes, family = "binomial")
+summary(togo_policy_distance)
+
+
 # Does the suggested bar code predict to-go policy at location?
 togo_policy_suggested_bar <- glm(formula=alcohol_togo ~ Suggested_code_bar, data = addresses_with_ruca_codes, family = "binomial")
 summary(togo_policy_suggested_bar)
@@ -541,11 +580,5 @@ table1(~alcohol_togo + NABCA_spirits_bars + NABCA_spirits_rest + Suggested_code_
 
 
 
-# Adding distance to school
 
-Distance to school could be a proxy variable that helps explain likelihood of targeting students as customers at these bars/restaurants (closer to school = higher likelihood at targeting students with advertising and sales)
-
-```{r distance-to-school}
-distance_data <- read_csv("Wave 1 Data and Sampling Frame 10 26 20")
-```
 
