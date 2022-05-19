@@ -111,6 +111,18 @@ ct_covariates_clean$tract_code <- as.character(ct_covariates_clean$tract_code)
 
 addresses_with_ruca_codes1 <- left_join(addresses_with_ruca_codes,ct_covariates_clean, by = "tract_code")
 
+new_policy_vars <- read_csv("Comparing state COVID Alc Policy Sources PT 2.csv")
+new_policy_vars_clean <- new_policy_vars %>%  
+  select(FIPS,
+         apis_bars = `APIS - Bars`,
+         apis_restaurants = `APIS - Restaurants`)
+
+addresses_with_ruca_codes1 <- left_join(addresses_with_ruca_codes1,new_policy_vars_clean, by = "FIPS")
+
+quick_look_policy <- addresses_with_ruca_codes1 %>% 
+  select(FIPS, NABCA_spirits_bars,apis_bars,NABCA_spirits_rest,apis_restaurants) %>% 
+  distinct(FIPS, .keep_all = TRUE)
+  
 ```
 
 # Adding distance to school
