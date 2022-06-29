@@ -74,10 +74,10 @@ clean_combined_coavriates_rest_bar <- clean_combined_covariates %>%
 
 
   
-clean_combined_covariates_trim <- clean_combined_covariates %>% 
+clean_combined_covariates_trim <- clean_combined_coavriates_rest_bar %>% 
   select(UID,SID=SID.x, SchoolName = SchoolName.x,
          BarName = BarName.x,
-         Suggested_code_bar,Suggested_code_rest,NABCA_spirits_bars,NABCA_spirits_rest,geographies.Census.Tracts.GEOID,geographies.Census.Tracts.OID,geographies.Census.Tracts.TRACT,addressComponents.zip,alcohol_togo,FIPS)
+         Suggested_code_bar,Suggested_code_rest,NABCA_spirits_bars,NABCA_spirits_rest,geographies.Census.Tracts.GEOID,geographies.Census.Tracts.OID,geographies.Census.Tracts.TRACT,addressComponents.zip,alcohol_togo,FIPS,bar_vs_rest)
 
 wave_2_data <- read_csv("Results for price stuff/Wave2_cleaned_dw.csv")
 wave_2_data_merge <- wave_2_data %>% 
@@ -388,11 +388,11 @@ summary(togo_policy_suggested_rest)
 togo_policy_nabca <- glm(formula=alcohol_togo ~ NABCA_spirits_rest + NABCA_spirits_bars, data = addresses_with_ruca_codes, family = "binomial")
 summary(togo_policy_nabca)
 
-#Type of retailer interaction
+#Type of retailer interactions
+togo_policy_interactions <- glm(formula=alcohol_togo ~ bar_vs_rest + Suggested_code_bar + Suggested_code_rest + NABCA_spirits_rest + NABCA_spirits_bars, data = addresses_with_ruca_codes, family = "binomial")
 
 
-
-tab_model(togo_policy_suggested_bar, togo_policy_suggested_rest,togo_policy_nabca, dv.labels = c("Likelihood of Site To-go Practice predicted by State-level Policy Suggested Bar Predictor", "Likelihood of Site To-go Practice predicted by State-level Policy Suggested Restaurant Predictor", "Likelihood of Site To-go practice predicted by NABCA spirits policies"))
+tab_model(togo_policy_suggested_bar, togo_policy_suggested_rest,togo_policy_nabca,togo_policy_interactions, dv.labels = c("Likelihood of Site To-go Practice predicted by State-level Policy Suggested Bar Predictor", "Likelihood of Site To-go Practice predicted by State-level Policy Suggested Restaurant Predictor", "Likelihood of Site To-go practice predicted by NABCA spirits policies","Interactions with if Bar and Policy"))
 
 
 ```
