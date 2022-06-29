@@ -61,6 +61,18 @@ combined_covariates2 <- combined_covariates %>%
   select(UID,geographies.Census.Tracts.GEOID,geographies.Census.Tracts.OID,geographies.Census.Tracts.TRACT,addressComponents.zip)
 
 clean_combined_covariates <- left_join(combined_covariates,combined_covariates2,by="UID")
+
+# Getting categorization of restaurant or bar
+# Rules from team: 
+# Restaurant: open midnights <= 3 nights a week
+# Bar = open midnights >3 times a week 
+# bar_vs_rest : 1 is bar, 0 is rest
+clean_combined_coavriates_rest_bar <- clean_combined_covariates %>% 
+  mutate(bar_vs_rest = case_when(X.NightsOpenPast12amEachWeek >= 3 ~ 1,
+                                 X.NightsOpenPast12amEachWeek < 3 ~ 0))
+
+
+
   
 clean_combined_covariates_trim <- clean_combined_covariates %>% 
   select(UID,SID=SID.x, SchoolName = SchoolName.x,
@@ -132,13 +144,17 @@ Distance to school could be a proxy variable that helps explain likelihood of ta
 ```{r distance-to-school}
 distance_data <- read_csv("Wave 1 Data and Sampling Frame 10 26 20.csv")
 
-measurements::conv_unit(420,"ft","mi")
 
 distance_data_clean <- distance_data %>% 
   mutate(distance_clean = case_when(str_detect(Distance, "ft| ft| feet|feet")~ conv_unit(as.numeric(str_remove(distance_data$Distance, "ft| ft| feet|feet")),"ft","mi"), TRUE ~ as.numeric(Distance))) %>% 
-  select(UID, Distance, distance_clean)
+  select(UID, Distance, distance_clean) %>% 
+  mutate(std_distance = std(distance_clean))
 
 addresses_with_ruca_codes <- left_join(addresses_with_ruca_codes1, distance_data_clean, by = "UID")
+```
+### adding restaurant or bar category 
+```{r categorizing-rest-or-bar}
+
 ```
 
 
@@ -263,18 +279,18 @@ summary(lvl1_beer)
 lvl1_vodka = lmer(vodka_price_change ∼ alcohol_togo + (1|tract_code), both_wave_data, REML=FALSE)
 summary(lvl1_vodka)
 
-lvl1_beer_distance = lmer(beer_price_change ∼ distance_clean + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+lvl1_beer_distance = lmer(beer_price_change ∼ std_distance + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
 summary(lvl1_beer_distance)
 
 #Vodka price and alcohol togo
-lvl1_vodka_distance = lmer(vodka_price_change ∼ distance_clean + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+lvl1_vodka_distance = lmer(vodka_price_change ∼ std_distance + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
 summary(lvl1_vodka_distance)
 
-lvl1_beer_togo_distance = lmer(beer_price_change ∼ alcohol_togo + distance_clean + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+lvl1_beer_togo_distance = lmer(beer_price_change ∼ alcohol_togo + std_distance + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
 summary(lvl1_beer_togo_distance)
 
 #Vodka price and alcohol togo
-lvl1_vodka_togo_distance = lmer(vodka_price_change ∼ alcohol_togo + distance_clean +(1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+lvl1_vodka_togo_distance = lmer(vodka_price_change ∼ alcohol_togo + std_distance +(1|tract_code), addresses_with_ruca_codes, REML=FALSE)
 summary(lvl1_vodka_togo_distance)
 
 
@@ -357,7 +373,7 @@ both_wave_data$Suggested_code_rest <- as.factor(both_wave_data$Suggested_code_re
 str(both_wave_data$Suggested_code_bar)
 
 # Does distance to campus predict to-go policy? Not sig. 
-togo_policy_distance <- glm(formula=alcohol_togo ~ distance_clean, data = addresses_with_ruca_codes, family = "binomial")
+togo_policy_distance <- glm(formula=alcohol_togo ~ std_distance, data = addresses_with_ruca_codes, family = "binomial")
 summary(togo_policy_distance)
 
 
@@ -371,6 +387,10 @@ summary(togo_policy_suggested_rest)
 # Other policy variables?
 togo_policy_nabca <- glm(formula=alcohol_togo ~ NABCA_spirits_rest + NABCA_spirits_bars, data = addresses_with_ruca_codes, family = "binomial")
 summary(togo_policy_nabca)
+
+#Type of retailer interaction
+
+
 
 tab_model(togo_policy_suggested_bar, togo_policy_suggested_rest,togo_policy_nabca, dv.labels = c("Likelihood of Site To-go Practice predicted by State-level Policy Suggested Bar Predictor", "Likelihood of Site To-go Practice predicted by State-level Policy Suggested Restaurant Predictor", "Likelihood of Site To-go practice predicted by NABCA spirits policies"))
 
