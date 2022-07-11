@@ -123,13 +123,21 @@ ct_covariates_clean$tract_code <- as.character(ct_covariates_clean$tract_code)
 
 addresses_with_ruca_codes1 <- left_join(addresses_with_ruca_codes,ct_covariates_clean, by = "tract_code")
 
+
+# Adding new policy variable from E-mail 
+
 new_policy_vars <- read_csv("Comparing state COVID Alc Policy Sources PT 2.csv")
 new_policy_vars_clean <- new_policy_vars %>%  
-  select(FIPS,
-         apis_bars = `APIS - Bars`,
-         apis_restaurants = `APIS - Restaurants`)
+  select(FIPS,Suggested_code_bar3, Suggested_code_rest4, Suggested_code_bar_spirits, Suggested_code_rest_spirits)  
+
 
 addresses_with_ruca_codes1 <- left_join(addresses_with_ruca_codes1,new_policy_vars_clean, by = "FIPS")
+
+addresses_with_ruca_codes2 <- addresses_with_ruca_codes1 %>% 
+    mutate(bw_togo_legal = case_when(bar_vs_rest == "1" & Suggested_code_bar3 == "1"|bar_vs_rest == "0" & Suggested_code_rest4 ~ "1",
+                                     TRUE ~ "0"),
+         spirits_togo_legal = case_when(bar_vs_rest == "1" & Suggested_code_bar_spirits == "1"| bar_vs_rest =="0" & Suggested_code_rest_spirits == "0" ~ "1",
+                                    TRUE ~ "0"))
 
 quick_look_policy <- addresses_with_ruca_codes1 %>% 
   select(FIPS, NABCA_spirits_bars,apis_bars,NABCA_spirits_rest,apis_restaurants) %>% 
@@ -150,11 +158,9 @@ distance_data_clean <- distance_data %>%
   select(UID, Distance, distance_clean) %>% 
   mutate(std_distance = std(distance_clean))
 
-addresses_with_ruca_codes <- left_join(addresses_with_ruca_codes1, distance_data_clean, by = "UID")
-```
-### adding restaurant or bar category 
-```{r categorizing-rest-or-bar}
+# Now create or doublecheck whether or not place sold togo Beer Wine / Spirit as an outcome 
 
+addresses_with_ruca_codes <- left_join(addresses_with_ruca_codes1, distance_data_clean, by = "UID")
 ```
 
 
@@ -345,7 +351,14 @@ No significant effect from RUCA codes or covariates, likely variance is already 
 
 -   Adding more than 2 levels requires doing random = \~ 1 \| group1/group 2 \*\* This indicates nested structure \*\* <https://stats.stackexchange.com/questions/12768/three-level-hierarchical-regression-using-lmer> \*\* Alternatively, random = \~ 1 \| group1 + random = \~ 1\| group 2 indicates cross-nested structure
 
+
+## Policy state level predictors
+
+bw_togo_legal
+spirits_togo_legal
+
 ```{r state-level-predictors}
+
 
 lvl3_vodka = lmer(vodka_price_change ∼ alcohol_togo + Suggested_code_bar+(1|tract_code), addresses_with_ruca_codes, REML=FALSE)
 summary(lvl3_vodka)
