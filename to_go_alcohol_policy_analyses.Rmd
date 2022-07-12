@@ -1,0 +1,379 @@
+---
+title: "to_go_alcohol_policy_analyses"
+author: "Drew Walker"
+date: '2022-07-12'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(measurements)
+library(units)
+library(table1)
+library(nlme)
+library(here)
+library(psych)
+library(misty)
+here()
+library(table1)
+library(ruca)
+library(lme4)
+library(sjPlot)
+library(sjmisc)
+library(patchwork)
+library(sjlabelled)
+#install.packages('TMB', type = 'source')
+library(TMB)
+```
+
+For this analysis, we will be utilizing data on alcohol to-go policies for bar and restaurant outlets located within 5 miles of college campuses in the US during the COVID-19 pandemic.
+
+We will utilize multilevel models to account for census tract clustering of outcomes, while assessing the associations between:
+
+1.  State to-go policy (predictor) and bar/restaurant beer and vodka prices (outcomes)
+
+2.   The state policy on whether bar/restaurants could sell to-go beer/wine and mixed drinks (predictor) with whether bars and restaurants around college campuses actually sold to-go beer, wine, and mixed drinks (outcomes).
+
+We present first a set of unadjusted models between each policy and bar/restaurant outcome clustered at the census tract level, followed by adjusted models with the inclusion of the following set of covariates:
+
+-   Distance from school (natural log)
+
+-   Diversity score
+
+-   Disadvantage score
+
+```{r load-data, include=FALSE}
+combined_covariates <- readRDS("census_tracts_bar_policy_togo_covariates.rds")
+combined_covariates2 <- combined_covariates %>% 
+  unnest(census_data) %>% 
+  select(UID,geographies.Census.Tracts.GEOID,geographies.Census.Tracts.OID,geographies.Census.Tracts.TRACT,addressComponents.zip)
+
+clean_combined_covariates <- left_join(combined_covariates,combined_covariates2,by="UID")
+
+# Getting categorization of restaurant or bar
+# Rules from team: 
+# Restaurant: open midnights <= 3 nights a week
+# Bar = open midnights >3 times a week 
+# bar_vs_rest : 1 is bar, 0 is rest
+clean_combined_coavriates_rest_bar <- clean_combined_covariates %>% 
+  mutate(bar_vs_rest = case_when(X.NightsOpenPast12amEachWeek >= 3 ~ 1,
+                                 X.NightsOpenPast12amEachWeek < 3 ~ 0))
+
+
+
+  
+clean_combined_covariates_trim <- clean_combined_coavriates_rest_bar %>% 
+  select(UID,SID=SID.x, SchoolName = SchoolName.x,
+         BarName = BarName.x,
+         Suggested_code_bar,Suggested_code_rest,NABCA_spirits_bars,NABCA_spirits_rest,geographies.Census.Tracts.GEOID,geographies.Census.Tracts.OID,geographies.Census.Tracts.TRACT,addressComponents.zip,alcohol_togo,FIPS,bar_vs_rest)
+
+wave_2_data <- read_csv("Results for price stuff/Wave2_cleaned_dw.csv")
+wave_2_data_merge <- wave_2_data %>% 
+  select(UID,SID,RC_Masks_customer,RC_Masks_staff,RC_distance,alcohol_togo, Beer_Price2, Vodka_price2,Cigarettes_inside,Ecig_inside)
+
+wave1_raw <- read_csv("Results for price stuff/Wave1_cleaned.csv")
+
+wave1_clean <- wave1_raw %>% 
+  select(UID,SID,Vodka_price,Beer_Price)
+
+
+both_wave_data_covariates <- left_join(clean_combined_covariates_trim, wave1_clean, by = "UID")
+both_wave_data <- left_join(both_wave_data_covariates,wave_2_data_merge, by = "UID")
+
+both_wave_data <- both_wave_data %>% 
+  mutate(beer_price_change = Beer_Price2-Beer_Price,
+         vodka_price_change = Vodka_price2-Vodka_price) %>% 
+  select(-SID.x) %>% 
+  rename(alcohol_togo = alcohol_togo.y,
+         zip = addressComponents.zip,
+         tract_code = geographies.Census.Tracts.GEOID)
+## Connect with RUCA codes at zip level
+ruca <- read_csv("ruca2010revised.csv",skip = 1)
+ruca_clean <- ruca %>% 
+  select(tract_code =`State-County-Tract FIPS Code (lookup by address at http://www.ffiec.gov/Geocode/)`,
+         ruca = `Primary RUCA Code 2010`,
+         secondary_ruca =`Secondary RUCA Code, 2010 (see errata)`
+         )
+data("classifications")
+ruca_clean <- left_join(ruca_clean,classifications, by = "ruca")
+#Dataframe with addresses, rucacodes, and record_ids 
+addresses_with_ruca_codes <- left_join(both_wave_data, ruca_clean, by = "tract_code")
+
+addresses_with_ruca_codes$ruca <- as.factor(addresses_with_ruca_codes$ruca)
+table1(~ruca + description, data = addresses_with_ruca_codes)
+
+
+# Add Census tract-level covariates from Pamela 
+ct_covariates <- read_csv("ct-level covar.csv")
+ct_covariates_clean <- ct_covariates %>% 
+  rename(tract_code=fips_ct)
+ct_covariates_clean$tract_code <- as.character(ct_covariates_clean$tract_code)
+
+addresses_with_ruca_codes1 <- left_join(addresses_with_ruca_codes,ct_covariates_clean, by = "tract_code")
+
+
+# Adding new policy variable from E-mail 
+
+new_policy_vars <- read_csv("Comparing state COVID Alc Policy Sources PT 2.csv")
+new_policy_vars_clean <- new_policy_vars %>%  
+  select(FIPS,Suggested_code_bar3, Suggested_code_rest4, Suggested_code_bar_spirits, Suggested_code_rest_spirits)  
+
+
+addresses_with_ruca_codes1 <- left_join(addresses_with_ruca_codes1,new_policy_vars_clean, by = "FIPS")
+
+addresses_with_ruca_codes2 <- addresses_with_ruca_codes1 %>% 
+    mutate(bw_togo_legal = case_when(bar_vs_rest == "1" & Suggested_code_bar3 == "1"|bar_vs_rest == "0" & Suggested_code_rest4 ~ "1",
+                                     TRUE ~ "0"),
+         spirits_togo_legal = case_when(bar_vs_rest == "1" & Suggested_code_bar_spirits == "1"| bar_vs_rest =="0" & Suggested_code_rest_spirits == "0" ~ "1",
+                                    TRUE ~ "0"))
+
+# Merging Beer/Wine/Mixed drink togo sales outcome
+beer_mixed_wine_sales_outcomes <- read_csv("merged_clean_bwm_wave2_edited2.csv")
+
+beer_mixed_wine_sales_outcomes_clean <- beer_mixed_wine_sales_outcomes %>% 
+  select(UID,beer,wine,mixed_drinks)
+
+addresses_with_ruca_codes3 <- left_join(addresses_with_ruca_codes2,beer_mixed_wine_sales_outcomes_clean, by = "UID")  
+
+distance_data <- read_csv("Wave 1 Data and Sampling Frame 10 26 20.csv")
+
+
+distance_data_clean <- distance_data %>% 
+  mutate(distance_clean = case_when(str_detect(Distance, "ft| ft| feet|feet")~ conv_unit(as.numeric(str_remove(distance_data$Distance, "ft| ft| feet|feet")),"ft","mi"), TRUE ~ as.numeric(Distance))) %>% 
+  select(UID, Distance, distance_clean) %>% 
+  mutate(std_distance = std(distance_clean),
+         log_distance = log(distance_clean))
+
+# Now create or doublecheck whether or not place sold togo Beer Wine / Spirit as an outcome 
+
+addresses_with_ruca_codes <- left_join(addresses_with_ruca_codes3, distance_data_clean, by = "UID")
+```
+
+## Exploratory Data Analysis
+
+-   univariates, bivariates of outcomes/predictors and covariates.
+-   Reorg this section
+
+```{r eda}
+# Outcome descriptive statistics
+describe(addresses_with_ruca_codes$distance_clean)
+describe(both_wave_data$vodka_price_change)
+describe(both_wave_data$beer_price_change)
+hist(both_wave_data$vodka_price_change)
+hist(both_wave_data$beer_price_change)
+# Should we remove $17 beer data point?
+
+## PREDICTORS
+both_wave_data$Suggested_code_bar <- as.factor(both_wave_data$Suggested_code_bar)
+both_wave_data$Suggested_code_rest <- as.factor(both_wave_data$Suggested_code_rest)
+both_wave_data$NABCA_spirits_bars <- as.factor(both_wave_data$NABCA_spirits_bars)
+both_wave_data$NABCA_spirits_rest <- as.factor(both_wave_data$NABCA_spirits_rest)
+both_wave_data$alcohol_togo <- as.factor(both_wave_data$alcohol_togo)
+
+#Covariates 
+table1(~Suggested_code_bar + Suggested_code_rest + NABCA_spirits_bars + NABCA_spirits_rest + alcohol_togo + beer + mixed_drinks + wine, data=addresses_with_ruca_codes)
+# Disadvantage
+# Distance
+# Diversity 
+```
+
+-   224 sites with complete alcohol to-go variable (179 missing, 44.4% of 403)
+
+-   Bars/restaurants nested within census tracts and states
+
+-   Policies of states and practices of local areas around alcohol sales are theoretically thought to influence prices
+
+# 3. Model Level Structure
+
+-   **Outcome**s: Price of vodka and price of beer
+
+-   **Level 1 Predictors**:
+
+    -   Bar or restaurant to-go alcohol practice
+
+-   **Level 2 Predictors**:
+
+    -   Census tract (disadvantage
+
+-   **Level 3 Predictor**:
+
+    -   State alcohol to-go APIS/NABCA policies (allowing or not allowing sales of alcohol)
+
+# Build Null Model (Outcomes only)
+
+-   In this model, we'll include the outcome (beer and vodka price changes) and test the clustering effects at tract code with clustering effects at zip code level.
+
+```{r build-null}
+# lmer version
+beer_null = lmer(beer_price_change ∼ (1|tract_code), both_wave_data, REML=FALSE)
+summary(beer_null)
+
+vodka_null = lmer(vodka_price_change ∼ (1|tract_code), both_wave_data, REML=FALSE)
+
+
+summary(vodka_null)
+
+zip_beer_null = lmer(beer_price_change ∼ (1|zip), both_wave_data, REML=FALSE)
+summary(zip_beer_null)
+
+zip_vodka_null = lmer(vodka_price_change ∼ (1|zip), both_wave_data, REML=FALSE)
+
+
+summary(zip_vodka_null)
+
+
+tab_model(beer_null,vodka_null, zip_beer_null, zip_vodka_null, dv.labels = c("Null Beer Model", "Null Vodka Model", "Null Beer Zip Model", "Null Vodka Zip Model"), show.aic = TRUE, show.dev = TRUE)
+```
+
+# ICC calculations
+
+<https://cran.r-project.org/web/packages/misty/misty.pdf>
+
+## Census tract level for beer/vodka price change
+
+```{r, census-ICCs}
+# Beer price change outcome, census tract group
+multilevel.icc(both_wave_data$beer_price_change, cluster = both_wave_data$tract_code)
+
+# Vodka price change outcome, census tract group
+
+multilevel.icc(both_wave_data$vodka_price_change, cluster = both_wave_data$tract_code)
+# Actually finding very high clustering for vodka price change 
+
+```
+
+## State level for beer/vodka price change
+
+```{r, state-ICCs}
+# Beer price change outcome, by state
+multilevel.icc(both_wave_data$beer_price_change, cluster = both_wave_data$FIPS)
+
+# Vodka price change outcome, by state 
+
+multilevel.icc(both_wave_data$vodka_price_change, cluster = both_wave_data$FIPS)
+# 5% ICC
+
+```
+# Beer and Vodka Price Change Models
+
+## Unadjusted beer/togo sale state legality on price 
+```{r unadjusted-policy-price-changes}
+#Beer and alcohol togo
+addresses_with_ruca_codes$bw_togo_legal
+unadjusted_beer_price = lmer(beer_price_change ∼ bw_togo_legal + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+#Vodka price and alcohol togo
+unadjusted_vodka_price = lmer(vodka_price_change ∼ spirits_togo_legal + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+tab_model(unadjusted_beer_price,unadjusted_vodka_price, dv.labels = c("Unadjusted Beer/Wine Togo State Legality on Beer Price ", "Unadjusted Spirits Togo State Legality on Vodka Price"), show.aic = TRUE, show.dev = TRUE)
+
+```
+
+## Adjusted beer/togo sale state legality on price
+### Covariates: 
+
+-   Distance from school (natural log)
+
+-   Diversity score
+
+-   Disadvantage score
+
+```{r adjusted-policy-price-changes}
+#Beer and alcohol togo
+
+unadjusted_beer_price = lmer(beer_price_change ∼ bw_togo_legal + log_distance + diversity + disadv + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+#Vodka price and alcohol togo
+unadjusted_vodka_price = lmer(vodka_price_change ∼ spirits_togo_legal + log_distance + diversity + disadv + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+tab_model(unadjusted_beer_price,unadjusted_vodka_price, dv.labels = c("Adjusted Beer/Wine Togo State Legality on Beer Price ", "Adjusted Spirits Togo State Legality on Vodka Price"), show.aic = TRUE, show.dev = TRUE)
+
+```
+
+## Unadjusted togo site practice on price 
+
+```{r unadjusted-price-changes}
+#Beer and alcohol togo
+addresses_with_ruca_codes$mixed_drinks
+unadjusted_beer_price = lmer(beer_price_change ∼ beer + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+#Vodka price and alcohol togo
+unadjusted_vodka_price = lmer(vodka_price_change ∼ mixed_drinks + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+tab_model(unadjusted_beer_price,unadjusted_vodka_price, dv.labels = c("Unadjusted Bar/Rest Practice of Selling Beer Togo on Beer Price ", "Unadjusted Bar/Rest Practice of Selling Mixed Drinks Togo on Vodka Price"), show.aic = TRUE, show.dev = TRUE)
+
+```
+
+## Adjusted togo site practice on price
+### Covariates: 
+
+-   Distance from school (natural log)
+
+-   Diversity score
+
+-   Disadvantage score
+
+
+```{r adjusted-price-changes}
+#Beer and alcohol togo
+
+adjusted_beer_price_practice = lmer(beer_price_change ∼ beer + log_distance + diversity + disadv + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+#Vodka price and alcohol togo
+adjusted_vodka_price_practice = lmer(vodka_price_change ∼ mixed_drinks + log_distance + diversity + disadv + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+tab_model(adjusted_beer_price_practice,adjusted_vodka_price_practice, dv.labels = c("Adjusted Beer/Wine Togo Site Sales Practice on Beer Price ", "Adjusted Mixed Drinks Togo Site Sales Practice on Vodka Price"), show.aic = TRUE, show.dev = TRUE)
+
+```
+# State Policy on Bar/Restaurant Actual Togo Practice Models
+
+## Unadjusted state policy on actual practice sales of togo Beer, Wine and Mixed Drinks
+
+```{r unadjusted-actual-practice}
+#Beer/Wine togo legal policy on actual practice of selling beer togo
+unadjusted_beer_togo = lmer(beer ∼ bw_togo_legal + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+#Beer/Wine togo legal policy on actual practice of selling Wine togo
+
+unadjusted_wine_togo = lmer(wine ∼ bw_togo_legal + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+#Liquor togo legal policy on actual practice of selling mixed drinks togo
+unadjusted_mixed_drinks_togo = lmer(mixed_drinks ∼ spirits_togo_legal + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+
+
+tab_model(unadjusted_beer_togo,unadjusted_wine_togo,unadjusted_mixed_drinks_togo, dv.labels = c("Unadjusted Beer/Wine Togo State Policy on Bar/Rest Practice of Selling Beer Togo", "Unadjusted Beer/Wine Togo State Policy on Bar/Rest Practice of Selling Wine Togo", "Unadjusted Spirits Togo State Policy on Bar/Rest Practice of Selling Mixed Drinks Togo"), show.aic = TRUE, show.dev = TRUE)
+
+```
+
+## Adjusted togo site practice on price
+### Covariates: 
+
+-   Distance from school (natural log)
+
+-   Diversity score
+
+-   Disadvantage score
+
+
+```{r adjusted-actual-practice}
+#Beer and alcohol togo
+
+adjusted_beer_price_practice = lmer(beer_price_change ∼ beer + log_distance + diversity + disadv + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+
+
+#Beer/Wine togo legal policy on actual practice of selling beer togo
+adjusted_beer_togo = lmer(beer ∼ bw_togo_legal + log_distance + diversity + disadv + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+#Beer/Wine togo legal policy on actual practice of selling Wine togo
+
+adjusted_wine_togo = lmer(wine ∼ bw_togo_legal + log_distance + diversity + disadv + (1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+#Liquor togo legal policy on actual practice of selling mixed drinks togo
+adjusted_mixed_drinks_togo = lmer(mixed_drinks ∼ spirits_togo_legal + log_distance + diversity + disadv +(1|tract_code), addresses_with_ruca_codes, REML=FALSE)
+
+tab_model(adjusted_beer_togo,adjusted_wine_togo,adjusted_mixed_drinks_togo, dv.labels = c("Adjusted Beer/Wine Togo State Policy on Bar/Rest Practice of Selling Beer Togo", "Adjusted Beer/Wine Togo State Policy on Bar/Rest Practice of Selling Wine Togo", "Adjusted Spirits Togo State Policy on Bar/Rest Practice of Selling Mixed Drinks Togo"), show.aic = TRUE, show.dev = TRUE)
+```
