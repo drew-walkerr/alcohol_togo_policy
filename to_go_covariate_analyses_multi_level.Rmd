@@ -83,9 +83,9 @@ wave_2_data <- read_csv("Results for price stuff/Wave2_cleaned_dw.csv")
 wave_2_data_merge <- wave_2_data %>% 
   select(UID,SID,RC_Masks_customer,RC_Masks_staff,RC_distance,alcohol_togo, Beer_Price2, Vodka_price2,Cigarettes_inside,Ecig_inside)
 
-wave1_clean <- read_csv("Results for price stuff/Wave1_cleaned.csv")
+wave1_raw <- read_csv("Results for price stuff/Wave1_cleaned.csv")
 
-wave1_clean <- wave1_clean %>% 
+wave1_clean <- wave1_raw %>% 
   select(UID,SID,Vodka_price,Beer_Price)
 
 
@@ -139,10 +139,13 @@ addresses_with_ruca_codes2 <- addresses_with_ruca_codes1 %>%
          spirits_togo_legal = case_when(bar_vs_rest == "1" & Suggested_code_bar_spirits == "1"| bar_vs_rest =="0" & Suggested_code_rest_spirits == "0" ~ "1",
                                     TRUE ~ "0"))
 
-quick_look_policy <- addresses_with_ruca_codes1 %>% 
-  select(FIPS, NABCA_spirits_bars,apis_bars,NABCA_spirits_rest,apis_restaurants) %>% 
-  distinct(FIPS, .keep_all = TRUE)
-  
+# Merging Beer/Wine/Mixed drink togo sales outcome
+beer_mixed_wine_sales_outcomes <- read_csv("merged_clean_bwm_wave2_edited2.csv")
+
+beer_mixed_wine_sales_outcomes_clean <- beer_mixed_wine_sales_outcomes %>% 
+  select(UID,beer,wine,mixed_drinks)
+
+addresses_with_ruca_codes3 <- left_join(addresses_with_ruca_codes2,beer_mixed_wine_sales_outcomes_clean, by = "UID")  
 ```
 
 # Adding distance to school
@@ -160,7 +163,7 @@ distance_data_clean <- distance_data %>%
 
 # Now create or doublecheck whether or not place sold togo Beer Wine / Spirit as an outcome 
 
-addresses_with_ruca_codes <- left_join(addresses_with_ruca_codes1, distance_data_clean, by = "UID")
+addresses_with_ruca_codes <- left_join(addresses_with_ruca_codes3, distance_data_clean, by = "UID")
 ```
 
 
